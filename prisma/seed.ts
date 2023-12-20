@@ -9,7 +9,7 @@ const main = async () => {
     const user = await prisma.user.create({
       data: {
         email: faker.internet.email(),
-        name: faker.name.fullName(),
+        name: faker.person.fullName(),
         // Créer un profil pour chaque utilisateur
         profile: {
           create: {
