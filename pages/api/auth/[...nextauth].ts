@@ -1,21 +1,32 @@
-import { NextAuthOptions } from 'next-auth';
+import { AuthOptions, NextAuthOptions } from 'next-auth';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import prisma from '@/lib/prisma';
 import NextAuth from 'next-auth/next';
 import GitHubProvider from 'next-auth/providers/github';
+import { env } from '@/lib/env';
 
 const githubId = process.env.GITHUB_ID;
 const githubSecret = process.env.GITHUB_SECRET;
 
-if (!githubId || !githubSecret) {
-  throw new Error('Missing GITHUBID or GITHUB SECRET env');
-}
-
-export const authConfig = {
-  providers: [
-    GitHubProvider({ clientId: githubId, clientSecret: githubSecret }),
-  ],
+export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
-} satisfies NextAuthOptions;
+  theme: {
+    logo: '/images/logo-text.png',
+  },
+  providers: [
+    GitHubProvider({
+      clientId: env.GITHUB_ID,
+      clientSecret: env.GITHUB_SECRET,
+    }),
+  ],
+  callbacks: {
+    session({ session, user }) {
+      session.user.name = user.name;
+      session.user.image = user.image;
+      session.user.id = user.id;
+      return session;
+    },
+  },
+};
 
-export default NextAuth(authConfig);
+export default NextAuth(authOptions);

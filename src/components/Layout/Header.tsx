@@ -6,12 +6,11 @@ import { AuthentificationButton } from '../auth/AuthentificationButton';
 export default function Header() {
   return (
     <header className="py-4 px-8">
-      <div className="flex justify-between w-xl mx-auto max-w-4xl ">
+      <div className="flex justify-between items-center w-xl mx-auto max-w-4xl ">
         <div className="flex items-baseline">
           <Link href="/">
-            <span className="text-2xl mr-6">Dev Luc</span>
+            <span className="text-2xl mr-6">Dev Tips</span>
           </Link>
-          <Link href="/explore">Explore</Link>
         </div>
         <nav className="flex gap-2 items-center">
           <ThemeToggle />

@@ -1,18 +1,18 @@
 import { getServerSession } from 'next-auth';
 import { LoggedInButton } from './LoggedInButton';
 import { LoginButton } from './LoginButton';
+import { authOptions } from '../../../pages/api/auth/[...nextauth]';
 
 export type AuthentificationButtonProps = {};
 
 export const AuthentificationButton = async (
   props: AuthentificationButtonProps
 ) => {
-  console.log();
-  console.log('Luc');
+  const session = await getServerSession(authOptions);
 
-  // if (!session) {
-  // console.log(session?.user?.email);
-  return <LoginButton />;
-  // }
-  // return <LoggedInButton />;
+  if (!session) {
+    return <LoginButton />;
+  }
+
+  return <LoggedInButton user={session.user} />;
 };

@@ -17,31 +17,40 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import AvatarFoo from '../../../public/01.png';
+import { signOut } from 'next-auth/react';
 
 import Link from 'next/link';
 import { LogOut, Settings, User } from 'lucide-react';
 
-export type LoggedInButtonProps = {};
+import { Session } from 'next-auth';
+
+export type LoggedInButtonProps = {
+  user: Session['user'];
+};
 
 export const LoggedInButton = (props: LoggedInButtonProps) => {
-  const logOut = () => {
-    console.log('logout');
-  };
-
   return (
     <div className="flex gap-2">
       <DropdownMenu>
         <AlertDialog>
           <DropdownMenuTrigger className="flex gap-2 items-center">
             <Avatar>
-              <AvatarImage src="../../../public/01.png" />
-              <AvatarFallback>{props.user.name.slice(0, 2)}</AvatarFallback>
+              {props.user?.image && (
+                <AvatarImage
+                  src={
+                    props.user.image ??
+                    `https://api.dicebear.com/7.x/lorelei/svg?seed=${props.user.name}`
+                  }
+                  alt={props.user.name ?? 'user picture'}
+                />
+              )}
+
+              <AvatarFallback>{props.user?.name?.slice(0, 2)}</AvatarFallback>
             </Avatar>
             {props.user.name}
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <Link href="settings">
+            <Link href="/admin">
               <DropdownMenuItem className="flex gap-2">
                 <Settings size={18} />
                 Settings
@@ -70,7 +79,7 @@ export const LoggedInButton = (props: LoggedInButtonProps) => {
                   <Button variant="destructive">Cancel</Button>
                 </AlertDialogCancel>
 
-                <Button onClick={() => logOut()} variant="secondary">
+                <Button onClick={() => signOut()} variant="secondary">
                   Logout
                 </Button>
               </AlertDialogFooter>
