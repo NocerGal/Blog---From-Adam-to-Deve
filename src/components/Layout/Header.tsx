@@ -2,6 +2,7 @@ import React from 'react';
 import { ThemeToggle } from '../ToggleTheme';
 import Link from 'next/link';
 import { AuthentificationButton } from '../auth/AuthentificationButton';
+import { Button } from '../ui/button';
 
 export default function Header() {
   return (
@@ -14,7 +15,11 @@ export default function Header() {
         </div>
         <nav className="flex gap-2 items-center">
           <ThemeToggle />
-          <ul className="flex gap-6">
+          <Link href={'/posts/createPost'}>
+            <Button>Create post</Button>
+          </Link>
+
+          <ul className="flex gap-6 px-1">
             <li>
               <AuthentificationButton />
             </li>

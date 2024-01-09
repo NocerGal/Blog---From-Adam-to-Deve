@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import React from 'react';
-import { authOptions } from '../../pages/api/auth/[...nextauth]';
+import { authOptions } from '../../../pages/api/auth/[...nextauth]';
 import prisma from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
 import Loader from '@/components/ui/loader';
@@ -38,7 +38,7 @@ export default async function pageAdmin() {
         'Invalid data. Image must be an URL and name must be between 3 and 40 characters.'
       );
 
-      redirect('/admin/errordatas');
+      redirect('/admin');
     }
 
     await prisma.user.update({
@@ -77,7 +77,6 @@ export default async function pageAdmin() {
                       name="userName"
                       id="userName"
                     />
-                    {/* {errorUserName ? <span>Error</span> : null} */}
                   </div>
                   <div>
                     <Label htmlFor="urlImage">Image</Label>
@@ -89,12 +88,22 @@ export default async function pageAdmin() {
                   </div>
                 </div>
               </div>
-              <button
-                type="submit"
-                className="bg-muted rounded-[0.5rem] py-1 px-2 hover:bg-muted-foreground hover:text-foreground transition-all"
-              >
-                Save changes
-              </button>
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col ">
+                  <span className="text-destructive">
+                    Username must be between 3 and 10 characters.
+                  </span>
+                  <span className="text-destructive">
+                    Image must be an URL.
+                  </span>
+                </div>
+                <button
+                  type="submit"
+                  className="bg-muted rounded-[0.5rem] py-1 px-2 hover:bg-muted-foreground hover:text-foreground transition-all"
+                >
+                  Save changes
+                </button>
+              </div>
             </form>
           </CardContent>
         </Card>

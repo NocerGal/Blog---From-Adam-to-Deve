@@ -29,7 +29,7 @@ export const CardPost = ({ article }: CardPostProps) => {
         </CardContent>
       </CardContent>
       <CardFooter className="flex flex-col justify-end items-end">
-        <CardTitle className="!m-0 text-xs text-secondary-foreground">
+        <CardTitle className="!m-0 text-xs text-muted-foreground">
           {article.updatedAt.toDateString()}
         </CardTitle>
       </CardFooter>

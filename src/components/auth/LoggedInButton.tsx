@@ -51,22 +51,22 @@ export const LoggedInButton = (props: LoggedInButtonProps) => {
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <Link href="/admin">
-              <DropdownMenuItem className="flex gap-2">
-                <Settings size={18} />
+              <DropdownMenuItem className="flex gap-2 cursor-pointer">
+                <Settings className="cursor-pointer" size={18} />
                 Settings
               </DropdownMenuItem>
             </Link>
             <DropdownMenuSeparator />
             <Link href="posts">
-              <DropdownMenuItem className="flex gap-2">
-                <User size={18} />
+              <DropdownMenuItem className="flex gap-2 cursor-pointer">
+                <User className="cursor-pointer" size={18} />
                 Your Posts
               </DropdownMenuItem>
             </Link>
             <DropdownMenuSeparator />
             <AlertDialogTrigger asChild>
-              <DropdownMenuItem className="flex gap-2">
-                <LogOut size={18} />
+              <DropdownMenuItem className="flex gap-2 cursor-pointer">
+                <LogOut className="hover:bg-destructive" size={18} />
                 LogOut
               </DropdownMenuItem>
             </AlertDialogTrigger>
@@ -79,7 +79,7 @@ export const LoggedInButton = (props: LoggedInButtonProps) => {
                   <Button variant="destructive">Cancel</Button>
                 </AlertDialogCancel>
 
-                <Button onClick={() => signOut()} variant="secondary">
+                <Button onClick={() => signOut()} variant="destructive">
                   Logout
                 </Button>
               </AlertDialogFooter>
