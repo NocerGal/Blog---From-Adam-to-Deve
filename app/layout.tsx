@@ -1,5 +1,3 @@
-// app/layout.tsx
-
 import { TailwindIndicator } from '@/components/TailwindIndicator';
 
 import { cn } from '@/lib/utils';

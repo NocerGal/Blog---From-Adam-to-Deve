@@ -89,13 +89,9 @@ export default async function pageAdmin() {
                 </div>
               </div>
               <div className="flex flex-col gap-4">
-                <div className="flex flex-col ">
-                  <span className="text-destructive">
-                    Username must be between 3 and 10 characters.
-                  </span>
-                  <span className="text-destructive">
-                    Image must be an URL.
-                  </span>
+                <div className="flex flex-col text-destructive">
+                  <span>Username must be between 3 and 10 characters.</span>
+                  <span>Image must be an URL.</span>
                 </div>
                 <button
                   type="submit"

@@ -24,7 +24,7 @@ export default async function Page() {
             orienté React et NextJs.
           </p>
           <p>
-            Je vous partagerai une fois pa r semaine des tutos et des tips sur
+            Je vous partagerai une fois par semaine des tutos et des tips sur
             des sujets React.
           </p>
         </div>
