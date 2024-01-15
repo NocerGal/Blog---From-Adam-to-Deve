@@ -1,14 +1,33 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { FormEvent, useState } from 'react';
 import FormComponent from './FormComponent';
-import { createPost } from './createPost.query';
 import Link from 'next/link';
 
 export default function PageCreatPost() {
   const [titlePreview] = useState('Tape your title');
   const [postDescriptionPreview] = useState('Tape your post description');
   const [textPreview, setTextPreview] = useState('Tape your text');
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+
+    const dataToSend = {
+      title: formData.get('postTitle'),
+      postDescription: formData.get('postDescription'),
+      content: formData.get('postContent'),
+    };
+
+    await fetch('/api/createPost', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(dataToSend),
+    });
+  };
 
   return (
     <div className="flex flex-col gap-4">
@@ -24,25 +43,24 @@ export default function PageCreatPost() {
           </Link>{' '}
           to write your article
         </p>
-        <form
-          className="flex flex-col gap-4 h-[30vh]"
-          onSubmit={(e) => {
-            createPost(e);
-          }}
-        >
+        <form className="flex flex-col gap-4 h-[30vh]" onSubmit={handleSubmit}>
           <input
             id="postTitle"
+            name="postTitle"
             type="text"
             defaultValue={titlePreview}
             className="bg-secondary py-2 px-3 rounded-lg"
           />
           <input
             id="postDescription"
+            name="postDescription"
             type="text"
             defaultValue={postDescriptionPreview}
             className="bg-secondary py-2 px-3 rounded-lg"
           />
           <textarea
+            id="postContent"
+            name="postContent"
             onChange={(e) => setTextPreview(e.target.value)}
             className="resize-none h-full w-full bg-secondary py-2 px-3 rounded-lg"
             defaultValue={textPreview}
