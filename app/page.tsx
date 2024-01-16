@@ -34,7 +34,7 @@ export default async function Page() {
         <div className="flex flex-col md:flex-row gap-2">
           {posts.slice(0, 3).map((post, index) => (
             <Link
-              href={`/posts/${post.id}`}
+              href={`/posts/view-post/${post.id}`}
               key={index}
               className="w-full md:w-1/3"
             >

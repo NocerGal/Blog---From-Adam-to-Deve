@@ -7,13 +7,20 @@ import React from 'react';
 import { authOptions } from '../../pages/api/auth/[...nextauth]';
 import prisma from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
-import Loader from '@/components/ui/loader';
+
 import { z } from 'zod';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
+import { getUserPosts } from '../findPost';
+import { Badge } from '@/components/ui/badge';
 
 export default async function pageAdmin() {
   const session = await getServerSession(authOptions);
+  if (session === null || session.user.id === undefined) {
+    return;
+  }
+
+  const userPosts = await getUserPosts(session.user.id);
 
   async function updateUserDatas(formData: FormData) {
     'use server';
@@ -55,16 +62,42 @@ export default async function pageAdmin() {
   return (
     <div>
       <h1 className="mb-4">Settings page</h1>
-      <div className="flex gap-4">
+      <div className="flex flex-col sm:flex-row gap-4 ">
         <Card className="flex-1">
           <CardHeader>
-            <h3>Your posts</h3>
+            <h2>Your posts</h2>
           </CardHeader>
+          <CardContent className="flex flex-col gap-4">
+            {userPosts.slice(0, 3).map((post, index) => (
+              <Card className="p-4" key={index}>
+                <div className="flex flex-col gap-2">
+                  <div className="flex justify-between">
+                    <h3>{post.title}</h3>
+                    <Badge variant={post.published ? 'default' : 'destructive'}>
+                      {post.published ? 'Published' : 'Unpublised'}
+                    </Badge>
+                  </div>
+
+                  <div className="flex justify-between items-center">
+                    <span className="text-muted-foreground text-sm">
+                      {post.updatedAt.toLocaleDateString()}
+                    </span>
+                    <a
+                      href={`/posts/modify-post/${post.id}`}
+                      className="bg-muted hover:bg-muted-foreground transition-all py-1 px-2 rounded-lg"
+                    >
+                      Modify
+                    </a>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </CardContent>
         </Card>
 
         <Card className="flex-[2]">
           <CardHeader>
-            <h3>Your informations</h3>
+            <h2>Your informations</h2>
           </CardHeader>
           <CardContent>
             <form action={updateUserDatas}>
@@ -77,7 +110,6 @@ export default async function pageAdmin() {
                       name="userName"
                       id="userName"
                     />
-                    {/* {errorUserName ? <span>Error</span> : null} */}
                   </div>
                   <div>
                     <Label htmlFor="urlImage">Image</Label>

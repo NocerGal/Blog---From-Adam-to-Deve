@@ -1,8 +1,9 @@
 'use client';
 
 import React, { FormEvent, useState } from 'react';
-import FormComponent from './FormComponent';
+
 import Link from 'next/link';
+import FormComponent from './FormComponent';
 
 export default function PageCreatPost() {
   const [titlePreview] = useState('Tape your title');
