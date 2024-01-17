@@ -72,7 +72,13 @@ export default async function pageAdmin() {
               <Card className="p-4" key={index}>
                 <div className="flex flex-col gap-2">
                   <div className="flex justify-between">
-                    <h3>{post.title}</h3>
+                    <h3
+                      className="whitespace-nowrap overflow-hidden text-ellipsis w-[100px]"
+                      title={post.title}
+                    >
+                      {post.title}
+                    </h3>
+
                     <Badge variant={post.published ? 'default' : 'destructive'}>
                       {post.published ? 'Published' : 'Unpublised'}
                     </Badge>

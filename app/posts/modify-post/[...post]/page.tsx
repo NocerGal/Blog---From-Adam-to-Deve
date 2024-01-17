@@ -1,11 +1,12 @@
 import React, { FormEvent, useState } from 'react';
-import FormComponent from './FormComponent';
+import FormComponent from './PreviewMarkdown';
 import Link from 'next/link';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../../../pages/api/auth/[...nextauth]';
 import prisma from '@/lib/prisma';
-import { getServerSideProps } from 'next/dist/build/templates/pages';
-import { GetServerSidePropsContext } from 'next';
+import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
+import FormUpdatePost from './formUpdatePost';
 
 export default async function PageCreatPost({
   params,
@@ -17,6 +18,7 @@ export default async function PageCreatPost({
       id: params.post[0],
     },
     select: {
+      id: true,
       title: true,
       postDescription: true,
       content: true,
@@ -50,10 +52,26 @@ export default async function PageCreatPost({
     return;
   }
 
-  const updatePostDatas = async (e: FormEvent) => {
+  const updatePostDatas = async (formData: FormData) => {
     'use server';
 
-    e.preventDefault();
+    const postTitle = String(formData.get('postTitle'));
+    const postDescription = String(formData.get('postDescription'));
+    const postContent = String(formData.get('postContent'));
+
+    await prisma.post.update({
+      where: {
+        id: getPostDatas.id,
+      },
+      data: {
+        title: postTitle,
+        postDescription: postDescription,
+        content: postContent,
+      },
+    });
+
+    revalidatePath(`/posts/modify-post/${params.post}`);
+    redirect(`/posts/modify-post/${params.post}`);
   };
 
   return (
@@ -70,36 +88,13 @@ export default async function PageCreatPost({
           </Link>{' '}
           to write your article
         </p>
-        <form className="flex flex-col gap-4 h-[30vh]" action={updatePostDatas}>
-          <input
-            id="postTitle"
-            name="postTitle"
-            type="text"
-            defaultValue={getPostDatas.title}
-            className="bg-secondary py-2 px-3 rounded-lg"
-          />
-          <input
-            id="postDescription"
-            name="postDescription"
-            type="text"
-            defaultValue={getPostDatas.postDescription}
-            className="bg-secondary py-2 px-3 rounded-lg"
-          />
-          <textarea
-            id="postContent"
-            name="postContent"
-            className="resize-none h-full w-full bg-secondary py-2 px-3 rounded-lg"
-            defaultValue={getPostDatas.content}
-          />
-          <button
-            type="submit"
-            className="bg-muted-foreground max-w-[140px] rounded-lg p-1"
-          >
-            Modify Post
-          </button>
-        </form>
+        <FormUpdatePost
+          postId={params.post}
+          postTitle={getPostDatas.title}
+          postDescription={getPostDatas.postDescription}
+          postContent={getPostDatas.content}
+        />
       </div>
-      <div>{<FormComponent textPreview={getPostDatas.content} />}</div>
     </div>
   );
 }
