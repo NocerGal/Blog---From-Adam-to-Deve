@@ -1,12 +1,11 @@
 import React, { FormEvent, useState } from 'react';
-import FormComponent from './PreviewMarkdown';
 import Link from 'next/link';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../../../pages/api/auth/[...nextauth]';
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import FormUpdatePost from './formUpdatePost';
+import FormUpdatePost from './FormUpdatePost';
 
 export default async function PageCreatPost({
   params,

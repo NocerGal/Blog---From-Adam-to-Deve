@@ -1,7 +1,7 @@
 'use client';
 
 import React, { FormEvent, useState, useRef } from 'react';
-import FormComponent from './PreviewMarkdown';
+import UpdatePostPreviewMarkdown from '@/components/markdown-preview/PreviewMarkdown';
 
 type formUpdatePostTypes = {
   postId: string;
@@ -19,14 +19,14 @@ const FormUpdatePost = (props: formUpdatePostTypes) => {
   const postDescriptionInputRef = useRef<HTMLInputElement>(null);
   const postContentInputRef = useRef<HTMLTextAreaElement>(null);
 
-  const handleUpdatePost = async (event: FormEvent<HTMLFormElement>) => {
+  const handleUpdatePost = async (event: FormEvent) => {
+    event.preventDefault();
     const dataToSend = {
       postId: props.postId,
       title: postTitleInputRef.current?.value,
       postDescription: postDescriptionInputRef.current?.value,
       content: postContentInputRef.current?.value,
     };
-    event.preventDefault();
     await fetch('/api/updatePost', {
       method: 'PATCH',
       headers: {
@@ -75,7 +75,7 @@ const FormUpdatePost = (props: formUpdatePostTypes) => {
           Modify Post
         </button>
       </form>
-      <FormComponent textPreview={postContent} />
+      <UpdatePostPreviewMarkdown textPreview={postContent} />
     </div>
   );
 };

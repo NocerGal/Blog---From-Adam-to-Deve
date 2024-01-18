@@ -3,7 +3,7 @@
 import React, { FormEvent, useState } from 'react';
 
 import Link from 'next/link';
-import FormComponent from './FormComponent';
+import CreatePostPreviewMarkdown from '@/components/markdown-preview/CreatePostPreviewMarkdown';
 
 export default function PageCreatPost() {
   const [titlePreview] = useState('Tape your title');
@@ -78,7 +78,7 @@ export default function PageCreatPost() {
         </form>
       </div>
       <div>
-        <FormComponent textPreview={textPreview} />
+        <CreatePostPreviewMarkdown textPreview={textPreview} />
       </div>
     </div>
   );
