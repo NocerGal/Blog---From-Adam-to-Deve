@@ -77,7 +77,7 @@ export default async function PageCreatPost({
     <div className="flex flex-col gap-4">
       <div>
         <p className="mb-3">
-          Create your article with markdown. Check this{' '}
+          Modify your article with markdown. Check this{' '}
           <Link
             className="underline hover:text-border"
             href="https://remarkjs.github.io/react-markdown/"

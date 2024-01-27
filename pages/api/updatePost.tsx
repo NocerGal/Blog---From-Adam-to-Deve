@@ -11,9 +11,9 @@ export default async function handlerUpdatePost(
     const session = await getServerSession(req, res, authOptions);
     const reqBody = req.body;
     const postId = reqBody.postId as string;
-    const postTitle = reqBody.title as string;
+    const title = reqBody.title as string;
     const postDescription = reqBody.postDescription as string;
-    const postContent = reqBody.content as string;
+    const content = reqBody.content as string;
 
     if (!session || !session.user) {
       res.status(401).json({ error: 'Unauthorized' });
@@ -21,14 +21,14 @@ export default async function handlerUpdatePost(
     }
 
     const data = {
-      postTitle,
+      title,
       postDescription,
-      postContent,
+      content,
     };
     try {
       await prisma.post.update({
         where: {
-          id: String(postId),
+          id: postId,
         },
         data: data,
       });

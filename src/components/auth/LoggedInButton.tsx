@@ -20,7 +20,7 @@ import {
 import { signOut } from 'next-auth/react';
 
 import Link from 'next/link';
-import { LogOut, Settings, User } from 'lucide-react';
+import { Heart, LogOut, Settings, User } from 'lucide-react';
 
 import { Session } from 'next-auth';
 
@@ -47,7 +47,7 @@ export const LoggedInButton = (props: LoggedInButtonProps) => {
 
               <AvatarFallback>{props.user?.name?.slice(0, 2)}</AvatarFallback>
             </Avatar>
-            {props.user.name}
+            <div className="hidden sm:block">{props.user.name}</div>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <Link href="/admin">
@@ -57,10 +57,16 @@ export const LoggedInButton = (props: LoggedInButtonProps) => {
               </DropdownMenuItem>
             </Link>
             <DropdownMenuSeparator />
-            <Link href="posts">
+            <Link href="/admin/user/allPosts">
               <DropdownMenuItem className="flex gap-2 cursor-pointer">
                 <User className="cursor-pointer" size={18} />
                 Your Posts
+              </DropdownMenuItem>
+            </Link>
+            <Link href="/likedPost">
+              <DropdownMenuItem className="flex gap-2 cursor-pointer">
+                <Heart className="cursor-pointer" size={18} />
+                azraLiked Posts
               </DropdownMenuItem>
             </Link>
             <DropdownMenuSeparator />

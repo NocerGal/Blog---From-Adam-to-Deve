@@ -22,11 +22,12 @@ const FormUpdatePost = (props: formUpdatePostTypes) => {
   const handleUpdatePost = async (event: FormEvent) => {
     event.preventDefault();
     const dataToSend = {
-      postId: props.postId,
+      postId: props.postId[0],
       title: postTitleInputRef.current?.value,
       postDescription: postDescriptionInputRef.current?.value,
       content: postContentInputRef.current?.value,
     };
+
     await fetch('/api/updatePost', {
       method: 'PATCH',
       headers: {

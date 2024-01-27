@@ -17,6 +17,7 @@ model Post {
     updatedAt       DateTime @updatedAt
     author          User?    @relation(fields: [authorId], references: [id])
     authorId        String?
+    // likeCount       Int      @default(0)
 }
 
 model Account {
@@ -62,6 +63,7 @@ model User {
     posts         Post[]
     accounts      Account[]
     sessions      Session[]
+    // role          String    @default("USER")
 
     @@map(name: "users")
 }

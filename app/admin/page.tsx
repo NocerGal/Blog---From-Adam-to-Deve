@@ -13,6 +13,8 @@ import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { getUserPosts } from '../findPost';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 export default async function pageAdmin() {
   const session = await getServerSession(authOptions);
@@ -98,6 +100,9 @@ export default async function pageAdmin() {
                 </div>
               </Card>
             ))}
+            <Link href={'/admin/user/allPosts'}>
+              <Button>View more</Button>
+            </Link>
           </CardContent>
         </Card>
 
