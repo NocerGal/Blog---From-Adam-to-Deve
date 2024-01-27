@@ -15,9 +15,23 @@ model Post {
     published       Boolean  @default(false)
     createdAt       DateTime @default(now())
     updatedAt       DateTime @updatedAt
-    author          User?    @relation(fields: [authorId], references: [id])
+    author          User?    @relation("UserPosts", fields: [authorId], references: [id])
+    likedBy         User[]   @relation("PostLikes")
     authorId        String?
-    // likeCount       Int      @default(0)
+
+    likeCount Int    @default(0)
+    Like      Like[]
+}
+
+model Like {
+    id        String   @id @default(cuid())
+    post      Post     @relation(fields: [postId], references: [id])
+    postId    String
+    user      User     @relation(fields: [userId], references: [id])
+    userId    String
+    createdAt DateTime @default(now())
+
+    @@unique([postId, userId])
 }
 
 model Account {
@@ -60,10 +74,12 @@ model User {
     image         String?
     createdAt     DateTime  @default(now()) @map(name: "created_at")
     updatedAt     DateTime  @updatedAt @map(name: "updated_at")
-    posts         Post[]
+    posts         Post[]    @relation("UserPosts")
+    likedPosts    Post[]    @relation("PostLikes")
     accounts      Account[]
     sessions      Session[]
-    // role          String    @default("USER")
+    role          String    @default("USER")
+    Like          Like[]
 
     @@map(name: "users")
 }

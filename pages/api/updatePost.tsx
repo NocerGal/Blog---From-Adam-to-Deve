@@ -33,7 +33,7 @@ export default async function handlerUpdatePost(
         data: data,
       });
 
-      res.status(200).json('res 200');
+      res.status(200).json('res 200 : article has been modified');
     } catch (error) {
       console.error('Error in formUpdatePost', error);
       res.status(500).json({ error: 'Failed to update the post' });

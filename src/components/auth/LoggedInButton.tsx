@@ -63,10 +63,10 @@ export const LoggedInButton = (props: LoggedInButtonProps) => {
                 Your Posts
               </DropdownMenuItem>
             </Link>
-            <Link href="/likedPost">
+            <Link href="/posts/posts-liked">
               <DropdownMenuItem className="flex gap-2 cursor-pointer">
                 <Heart className="cursor-pointer" size={18} />
-                azraLiked Posts
+                Liked Posts
               </DropdownMenuItem>
             </Link>
             <DropdownMenuSeparator />

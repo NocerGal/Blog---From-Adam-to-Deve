@@ -5,7 +5,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import React from 'react';
 import { authOptions } from '../../pages/api/auth/[...nextauth]';
-import prisma from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
 
 import { z } from 'zod';
@@ -15,12 +14,23 @@ import { getUserPosts } from '../findPost';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import prisma from '@/lib/prisma';
 
 export default async function pageAdmin() {
   const session = await getServerSession(authOptions);
+
   if (session === null || session.user.id === undefined) {
     return;
   }
+
+  const getUserRole = await prisma.user.findUnique({
+    where: {
+      id: session.user.id,
+    },
+    select: {
+      role: true,
+    },
+  });
 
   const userPosts = await getUserPosts(session.user.id);
 
@@ -121,6 +131,10 @@ export default async function pageAdmin() {
                       name="userName"
                       id="userName"
                     />
+                  </div>
+                  <div>
+                    <Label>User Type</Label>
+                    <Input type="text" value={getUserRole?.role} disabled />
                   </div>
                   <div>
                     <Label htmlFor="urlImage">Image</Label>

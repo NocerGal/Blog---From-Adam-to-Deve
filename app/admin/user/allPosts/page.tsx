@@ -16,6 +16,8 @@ import Link from 'next/link';
 
 export default async function pageAdmin() {
   const session = await getServerSession(authOptions);
+
+  console.log(session);
   if (session === null || session.user.id === undefined) {
     return;
   }

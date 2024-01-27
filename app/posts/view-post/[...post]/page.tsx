@@ -2,12 +2,27 @@ import React from 'react';
 import Markdown from 'react-markdown';
 import style from './markdown-styles.module.css';
 import Image from 'next/image';
+import prisma from '@/lib/prisma';
+import { LikePostButton } from '@/components/post/likePostButton';
+import { Heart } from 'lucide-react';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '../../../../pages/api/auth/[...nextauth]';
 
 export default async function postsPage({
   params,
 }: {
-  params: { posts: string };
+  params: { post: string };
 }) {
+  const session = await getServerSession(authOptions);
+  const getPostLikes = await prisma.post.findUnique({
+    where: {
+      id: params.post[0],
+    },
+    select: {
+      Like: true,
+    },
+  });
+
   const markdown = `# A demo of "react-markdown"
 
   "react-markdown" is a markdown component for React.
@@ -36,6 +51,17 @@ export default async function postsPage({
         height={1}
       />
       <Markdown className={style.reactMarkDown}>{markdown}</Markdown>
+
+      <div className="flex justify-end cursor-pointer">
+        <LikePostButton
+          postId={params.post[0]}
+          likeCount={
+            getPostLikes === null || getPostLikes === undefined
+              ? 'unable to get likes'
+              : getPostLikes.Like.length
+          }
+        />
+      </div>
     </div>
   );
 }
