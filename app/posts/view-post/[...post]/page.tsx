@@ -4,7 +4,6 @@ import style from './markdown-styles.module.css';
 import Image from 'next/image';
 import prisma from '@/lib/prisma';
 import { LikePostButton } from '@/components/post/likePostButton';
-import { Heart } from 'lucide-react';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../../../pages/api/auth/[...nextauth]';
 
@@ -13,7 +12,6 @@ export default async function postsPage({
 }: {
   params: { post: string };
 }) {
-  const session = await getServerSession(authOptions);
   const getPostLikes = await prisma.post.findUnique({
     where: {
       id: params.post[0],
@@ -39,6 +37,15 @@ export default async function postsPage({
   * Lets you define your own components.
   * Has a lot of plugins
   `;
+
+  const userLikeBoolean = !getPostLikes?.Like.some(async (like) => {
+    // session dans le some, car sinon, ne permet pas à un utilisateur non connecté de voir le post
+    const session = await getServerSession(authOptions);
+    like.userId === session?.user.id;
+  });
+
+  const checkUserConnected = await getServerSession(authOptions);
+
   return (
     <div className="flex flex-col gap-12">
       <Image
@@ -54,10 +61,12 @@ export default async function postsPage({
 
       <div className="flex justify-end cursor-pointer">
         <LikePostButton
+          checkUser={checkUserConnected}
+          userLike={!userLikeBoolean}
           postId={params.post[0]}
           likeCount={
             getPostLikes === null || getPostLikes === undefined
-              ? 'unable to get likes'
+              ? 9999
               : getPostLikes.Like.length
           }
         />
