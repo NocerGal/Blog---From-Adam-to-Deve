@@ -4,6 +4,8 @@ import React, { FormEvent, useState } from 'react';
 
 import Link from 'next/link';
 import CreatePostPreviewMarkdown from '@/components/markdown-preview/CreatePostPreviewMarkdown';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '../../../pages/api/auth/[...nextauth]';
 
 export default function PageCreatPost() {
   const [titlePreview] = useState('Tape your title');

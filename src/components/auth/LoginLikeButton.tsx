@@ -1,4 +1,5 @@
 'use client';
+import { useMutation } from '@tanstack/react-query';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -14,7 +15,7 @@ import { signIn, signOut } from 'next-auth/react';
 import Loader from '../ui/loader';
 export type LoginButtonProps = {};
 
-export const LoginButton = (props: LoginButtonProps) => {
+export const LoginLikeButton = (props: LoginButtonProps) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger>Connect</AlertDialogTrigger>
