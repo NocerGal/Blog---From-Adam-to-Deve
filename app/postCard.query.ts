@@ -2,7 +2,7 @@ import prisma from '@/lib/prisma';
 import { Prisma } from '@prisma/client';
 
 export const getAllPosts = async () => {
-  const post = await prisma.post.findMany({
+  const allPosts = await prisma.post.findMany({
     select: {
       id: true,
       title: true,
@@ -12,7 +12,11 @@ export const getAllPosts = async () => {
     },
   });
 
-  return post;
+  const getAllPostsSortByDate = (await allPosts).sort((a, b) => {
+    return b.updatedAt.getTime() - a.updatedAt.getTime();
+  });
+
+  return getAllPostsSortByDate;
 };
 
 export type getAllPostsType = NonNullable<

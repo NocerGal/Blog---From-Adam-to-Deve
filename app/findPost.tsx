@@ -1,5 +1,4 @@
 import prisma from '@/lib/prisma';
-import { Prisma } from '@prisma/client';
 
 export const getUserPosts = async (authorId: string) => {
   const userPosts = prisma.post.findMany({
@@ -14,5 +13,9 @@ export const getUserPosts = async (authorId: string) => {
     },
   });
 
-  return userPosts;
+  const userPostsSortByDate = (await userPosts).sort((a, b) => {
+    return b.updatedAt.getTime() - a.updatedAt.getTime();
+  });
+
+  return userPostsSortByDate;
 };

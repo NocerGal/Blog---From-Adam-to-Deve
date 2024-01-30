@@ -1,3 +1,4 @@
+// Obligé de conserver un use client ici et également pas possibiltié d'utiliser use server dans le handleSubmit, car je souhiate conserver les useState pour passer le textPreview à mon Composant MarkdownPreview
 'use client';
 
 import React, { FormEvent, useState } from 'react';
@@ -5,7 +6,7 @@ import React, { FormEvent, useState } from 'react';
 import Link from 'next/link';
 import CreatePostPreviewMarkdown from '@/components/markdown-preview/CreatePostPreviewMarkdown';
 import { useRouter } from 'next/navigation';
-import { revalidatePath } from 'next/cache';
+import { z } from 'zod';
 
 export default function PageCreatPost() {
   const router = useRouter();
@@ -17,26 +18,45 @@ export default function PageCreatPost() {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const formData = new FormData(event.currentTarget);
-
-    const dataToSend = {
-      title: formData.get('postTitle'),
-      postDescription: formData.get('postDescription'),
-      content: formData.get('postContent'),
-    };
-
-    await fetch('/api/createPost', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(dataToSend),
+    const FormSchema = z.object({
+      title: z.string().min(8).max(55),
+      imageUrl: z.string().url().optional(),
+      postDescription: z.string(),
+      content: z.string(),
     });
 
+    const formData = new FormData(event.currentTarget);
+
+    const title = formData.get('postTitle');
+    const imageUrl = formData.get('postImageUrl');
+    const postDescription = formData.get('postDescription');
+    const content = formData.get('postContent');
+
+    const safeDataTosend = FormSchema.safeParse({
+      title,
+      imageUrl,
+      postDescription,
+      content,
+    });
+
+    if (!safeDataTosend.success) {
+      const searchParams = new URLSearchParams();
+      searchParams.set(
+        'error',
+        'Invalid data. Image must be an URL and name must be between 3 and 40 characters.'
+      );
+    } else {
+      await fetch('/api/createPost', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(safeDataTosend.data),
+      });
+    }
+
     const getCurrentPostId = await fetch(
-      `/api/getPostByTitle?postTitle=${encodeURIComponent(
-        dataToSend.title as string
-      )}`,
+      `/api/getPostByTitle?postTitle=${encodeURIComponent(title as string)}`,
       {
         method: 'GET',
         headers: {
@@ -49,9 +69,8 @@ export default function PageCreatPost() {
         return res[0].id;
       });
 
-    revalidatePath('/posts/createPost');
     router.push(
-      'http://localhost:3000/admin/preview-unpblished-post/cls0adk3y001xgss55yd51min'
+      `http://localhost:3000/admin/preview-unpblished-post/${getCurrentPostId}`
     );
   };
 
@@ -75,6 +94,13 @@ export default function PageCreatPost() {
             name="postTitle"
             type="text"
             defaultValue={titlePreview}
+            className="bg-secondary py-2 px-3 rounded-lg"
+          />
+          <input
+            id="postImageUrl"
+            name="postImageUrl"
+            type="url"
+            defaultValue="Insert image url. It's not mandatory."
             className="bg-secondary py-2 px-3 rounded-lg"
           />
           <input

@@ -28,39 +28,47 @@ export default async function PageLikedPosts() {
 
   return (
     <div>
-      <h1 className="mb-6">Liked posts</h1>
-      <div className="flex flex-col gap-4">
-        {getAllPostsLikedByUser[0].Like.map((likedPost, index) => (
-          <div key={index}>
-            {getAllPostsDatas.map(
-              (post, index) =>
-                likedPost.postId === post.id && (
-                  <Card key={index}>
-                    <CardHeader className="pb-4">
-                      <CardTitle>{post.title}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <span className="font font-semibold">
-                        Post description :
-                      </span>{' '}
-                      {post.postDescription}
-                    </CardContent>
-                    <CardFooter>
-                      <div className="flex flex-col sm:flex-row justify-between sm:items-end w-full">
-                        <p>
-                          Liked on {likedPost.createdAt.toLocaleDateString()}
-                        </p>
-                        <Link href={`/posts/view-post/${post.id}`}>
-                          <Button>View post</Button>
-                        </Link>
-                      </div>
-                    </CardFooter>
-                  </Card>
-                )
-            )}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-3xl">Liked posts</CardTitle>
+        </CardHeader>
+
+        <CardContent>
+          <div className="flex flex-col gap-4">
+            {getAllPostsLikedByUser[0].Like.map((likedPost, index) => (
+              <div key={index}>
+                {getAllPostsDatas.map(
+                  (post, index) =>
+                    likedPost.postId === post.id && (
+                      <Card key={index}>
+                        <CardHeader className="pb-4">
+                          <CardTitle>{post.title}</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <span className="font font-semibold">
+                            Post description :
+                          </span>{' '}
+                          {post.postDescription}
+                        </CardContent>
+                        <CardFooter>
+                          <div className="flex flex-col sm:flex-row justify-between sm:items-end w-full">
+                            <p>
+                              Liked on{' '}
+                              {likedPost.createdAt.toLocaleDateString()}
+                            </p>
+                            <Link href={`/posts/view-post/${post.id}`}>
+                              <Button>View post</Button>
+                            </Link>
+                          </div>
+                        </CardFooter>
+                      </Card>
+                    )
+                )}
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

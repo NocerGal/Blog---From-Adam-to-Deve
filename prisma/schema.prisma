@@ -12,6 +12,7 @@ model Post {
     title           String
     postDescription String
     content         String?
+    image           String?
     published       Boolean  @default(false)
     createdAt       DateTime @default(now())
     updatedAt       DateTime @updatedAt
@@ -21,6 +22,7 @@ model Post {
 
     likeCount Int    @default(0)
     Like      Like[]
+    tags      Tag[]  @relation("PostTags")
 }
 
 model Like {
@@ -32,6 +34,14 @@ model Like {
     createdAt DateTime @default(now())
 
     @@unique([postId, userId])
+}
+
+model Tag {
+    id    String @id @default(cuid())
+    name  String @unique
+    posts Post[] @relation("PostTags")
+
+    @@map("tags")
 }
 
 model Account {

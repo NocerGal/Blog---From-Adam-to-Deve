@@ -52,6 +52,7 @@ export default async function postsPage({
 
   return (
     <div className="flex flex-col gap-12">
+      <h1>This article is not published. It has to be reviewed by an admin</h1>
       <Image
         className="h-[48vh] object-cover object-center"
         src={
@@ -70,7 +71,7 @@ export default async function postsPage({
           postId={params.post[0]}
           likeCount={
             getPostLikes === null || getPostLikes === undefined
-              ? 9999
+              ? 0
               : getPostLikes.Like.length
           }
         />

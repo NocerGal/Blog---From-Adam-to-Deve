@@ -51,7 +51,7 @@ export default async function pageAdmin() {
                 </CardHeader>
                 <CardContent>
                   <div className="flex flex-row gap-1">
-                    <span className="font-semibold">Description : </span>
+                    <span className="font-semibold mb-2">Description : </span>
 
                     <p>{post.postDescription}</p>
                   </div>

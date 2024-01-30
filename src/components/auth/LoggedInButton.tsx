@@ -23,27 +23,35 @@ import Link from 'next/link';
 import { Heart, LogOut, Settings, User } from 'lucide-react';
 
 import { Session } from 'next-auth';
+import { createHash } from 'crypto';
 
 export type LoggedInButtonProps = {
   user: Session['user'];
 };
 
 export const LoggedInButton = (props: LoggedInButtonProps) => {
+  function hashName(name: string) {
+    return createHash('sha256').update(name).digest('hex');
+  }
+
+  const hashedName =
+    props.user.name == null || props.user.name == undefined
+      ? 'error'
+      : hashName(props.user.name);
+
   return (
     <div className="flex gap-2">
       <DropdownMenu>
         <AlertDialog>
           <DropdownMenuTrigger className="flex gap-2 items-center">
             <Avatar>
-              {props.user?.image && (
-                <AvatarImage
-                  src={
-                    props.user.image ??
-                    `https://api.dicebear.com/7.x/lorelei/svg?seed=${props.user.name}`
-                  }
-                  alt={props.user.name ?? 'user picture'}
-                />
-              )}
+              <AvatarImage
+                src={
+                  props.user.image ??
+                  `https://api.dicebear.com/7.x/lorelei/svg?seed=${hashedName}`
+                }
+                alt={props.user.name ?? 'user picture'}
+              />
 
               <AvatarFallback>{props.user?.name?.slice(0, 2)}</AvatarFallback>
             </Avatar>
