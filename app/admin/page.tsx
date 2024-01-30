@@ -117,7 +117,7 @@ export default async function pageAdmin() {
                   <div className="flex flex-col gap-2">
                     <div className="flex justify-between">
                       <h3
-                        className="whitespace-nowrap overflow-hidden text-ellipsis w-[100px]"
+                        className="whitespace-nowrap overflow-hidden text-ellipsis sm:w-[100px]"
                         title={post.title}
                       >
                         {post.title}
