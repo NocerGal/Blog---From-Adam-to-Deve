@@ -4,10 +4,12 @@ import React, { FormEvent, useState } from 'react';
 
 import Link from 'next/link';
 import CreatePostPreviewMarkdown from '@/components/markdown-preview/CreatePostPreviewMarkdown';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '../../../pages/api/auth/[...nextauth]';
+import { useRouter } from 'next/navigation';
+import { revalidatePath } from 'next/cache';
 
 export default function PageCreatPost() {
+  const router = useRouter();
+
   const [titlePreview] = useState('Tape your title');
   const [postDescriptionPreview] = useState('Tape your post description');
   const [textPreview, setTextPreview] = useState('Tape your text');
@@ -30,6 +32,27 @@ export default function PageCreatPost() {
       },
       body: JSON.stringify(dataToSend),
     });
+
+    const getCurrentPostId = await fetch(
+      `/api/getPostByTitle?postTitle=${encodeURIComponent(
+        dataToSend.title as string
+      )}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    )
+      .then((res) => res.json())
+      .then((res) => {
+        return res[0].id;
+      });
+
+    revalidatePath('/posts/createPost');
+    router.push(
+      'http://localhost:3000/admin/preview-unpblished-post/cls0adk3y001xgss55yd51min'
+    );
   };
 
   return (
