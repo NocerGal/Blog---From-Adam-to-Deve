@@ -4,15 +4,19 @@ import React from 'react';
 import { authOptions } from '../pages/api/auth/[...nextauth]';
 import { getAllPosts } from './postCard.query';
 import Link from 'next/link';
+import prisma from '@/lib/prisma';
 
 export default async function Page() {
   const session = getServerSession(authOptions);
 
   const posts = await getAllPosts();
 
+  const getAllTags = await prisma.tag.findMany();
+
   return (
     <div>
       <div className="flex flex-col mb-8 items-center w-full">
+        <p>Text tags </p>
         <h1 className="text-4xl mb-2">Dev Tips Fr</h1>
         <h2 className="text-xl">Des tips en français</h2>
         <h2 className="text-xl">et une fois par semaine!</h2>

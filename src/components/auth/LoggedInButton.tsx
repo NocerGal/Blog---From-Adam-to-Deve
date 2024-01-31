@@ -94,7 +94,10 @@ export const LoggedInButton = (props: LoggedInButtonProps) => {
                   <Button variant="destructive">Cancel</Button>
                 </AlertDialogCancel>
 
-                <Button onClick={() => signOut()} variant="destructive">
+                <Button
+                  onClick={() => signOut({ callbackUrl: '/' })}
+                  variant="destructive"
+                >
                   Logout
                 </Button>
               </AlertDialogFooter>

@@ -79,9 +79,9 @@ export default function PageCreatPost() {
         return res[0].id;
       });
 
-    // router.push(
-    //   `http://localhost:3000/admin/preview-unpblished-post/${getCurrentPostId}`
-    // );
+    router.push(
+      `http://localhost:3000/admin/preview-unpblished-post/${getCurrentPostId}`
+    );
   };
 
   const getAllTags = async () => {

@@ -39,7 +39,7 @@ export default function TriggerAuth(props: TriggerAuthType) {
           >
             Connect with Github
           </Button>
-          <Button onClick={async () => await signOut()}>
+          <Button onClick={async () => await signOut({ callbackUrl: '/' })}>
             <MailIcon size={16} className="mr-2" /> Disconnect
           </Button>
         </AlertDialogFooter>
