@@ -1,6 +1,6 @@
 import prisma from '@/lib/prisma';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { Session, getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth';
 import { authOptions } from './auth/[...nextauth]';
 
 export default async function handlerCreatePost(
@@ -9,7 +9,7 @@ export default async function handlerCreatePost(
 ) {
   if (req.method === 'POST') {
     const session = await getServerSession(req, res, authOptions);
-    const { title, postDescription, content } = req.body;
+    const { title, postDescription, tag, content } = req.body;
 
     if (!session || !session.user) {
       res.status(401).json({ error: 'Unauthorized' });
@@ -26,6 +26,22 @@ export default async function handlerCreatePost(
           authorId: session.user.id,
         },
       });
+
+      const newPostId = await prisma.post.findFirst({
+        where: {
+          title: title,
+        },
+      });
+
+      await prisma.tag.update({
+        where: { id: tag },
+        data: {
+          posts: {
+            connect: [{ id: newPostId?.id }],
+          },
+        },
+      });
+
       res.status(200).json(newPost);
     } catch (error) {
       res.status(500).json({ error: 'Error API' });

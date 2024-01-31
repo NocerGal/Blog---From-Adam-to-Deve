@@ -1,12 +1,18 @@
 // Obligé de conserver un use client ici et également pas possibiltié d'utiliser use server dans le handleSubmit, car je souhiate conserver les useState pour passer le textPreview à mon Composant MarkdownPreview
 'use client';
 
-import React, { FormEvent, useState } from 'react';
+import React, { FormEvent, useEffect, useState } from 'react';
 
 import Link from 'next/link';
 import CreatePostPreviewMarkdown from '@/components/markdown-preview/CreatePostPreviewMarkdown';
 import { useRouter } from 'next/navigation';
 import { z } from 'zod';
+import { Url } from 'url';
+
+type Tag = {
+  id: string;
+  name: string;
+};
 
 export default function PageCreatPost() {
   const router = useRouter();
@@ -14,28 +20,32 @@ export default function PageCreatPost() {
   const [titlePreview] = useState('Tape your title');
   const [postDescriptionPreview] = useState('Tape your post description');
   const [textPreview, setTextPreview] = useState('Tape your text');
+  const [allAvailablesTags, setAllAvailablesTags] = useState<Tag[]>([]);
+
+  const FormSchema = z.object({
+    title: z.string().min(8).max(55),
+    imageUrl: z.string().url().optional().or(z.literal('')),
+    postDescription: z.string(),
+    tag: z.string(),
+    content: z.string(),
+  });
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const FormSchema = z.object({
-      title: z.string().min(8).max(55),
-      imageUrl: z.string().url().optional(),
-      postDescription: z.string(),
-      content: z.string(),
-    });
-
     const formData = new FormData(event.currentTarget);
 
-    const title = formData.get('postTitle');
-    const imageUrl = formData.get('postImageUrl');
-    const postDescription = formData.get('postDescription');
-    const content = formData.get('postContent');
+    const title = formData.get('postTitle') as string;
+    const imageUrl = formData.get('postImageUrl') as string;
+    const postDescription = formData.get('postDescription') as string;
+    const tag = formData.get('postTag') as string;
+    const content = formData.get('postContent') as string;
 
     const safeDataTosend = FormSchema.safeParse({
       title,
       imageUrl,
       postDescription,
+      tag,
       content,
     });
 
@@ -56,7 +66,7 @@ export default function PageCreatPost() {
     }
 
     const getCurrentPostId = await fetch(
-      `/api/getPostByTitle?postTitle=${encodeURIComponent(title as string)}`,
+      `/api/getPostByTitle?postTitle=${encodeURIComponent(title)}`,
       {
         method: 'GET',
         headers: {
@@ -69,11 +79,33 @@ export default function PageCreatPost() {
         return res[0].id;
       });
 
-    router.push(
-      `http://localhost:3000/admin/preview-unpblished-post/${getCurrentPostId}`
-    );
+    // router.push(
+    //   `http://localhost:3000/admin/preview-unpblished-post/${getCurrentPostId}`
+    // );
   };
 
+  const getAllTags = async () => {
+    const response = await fetch('/api/tags/getAllTags', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const data = await response.json();
+    return data;
+  };
+
+  useEffect(() => {
+    getAllTags()
+      .then((data) => {
+        setAllAvailablesTags(data);
+      })
+      .catch((error) => {
+        console.error('Erreur lors de la récupération des tags :', error);
+      });
+  }, []);
+
+  console.log(allAvailablesTags);
   return (
     <div className="flex flex-col gap-4">
       <div>
@@ -88,6 +120,7 @@ export default function PageCreatPost() {
           </Link>{' '}
           to write your article
         </p>
+
         <form className="flex flex-col gap-4 h-[30vh]" onSubmit={handleSubmit}>
           <input
             id="postTitle"
@@ -110,6 +143,22 @@ export default function PageCreatPost() {
             defaultValue={postDescriptionPreview}
             className="bg-secondary py-2 px-3 rounded-lg"
           />
+          <select
+            name="postTag"
+            id="postTag"
+            defaultValue={'Select a tag'}
+            className="bg-secondary py-2 px-3 rounded-lg"
+          >
+            <option disabled selected>
+              Select a tag
+            </option>
+            {allAvailablesTags.map((tag) => (
+              <option key={tag.id} value={tag.id}>
+                {tag.name}
+              </option>
+            ))}
+          </select>
+
           <textarea
             id="postContent"
             name="postContent"
