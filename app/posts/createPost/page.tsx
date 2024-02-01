@@ -7,7 +7,7 @@ import Link from 'next/link';
 import CreatePostPreviewMarkdown from '@/components/markdown-preview/CreatePostPreviewMarkdown';
 import { useRouter } from 'next/navigation';
 import { z } from 'zod';
-import { Url } from 'url';
+import { SessionType } from '../../../pages/api/auth/getSession';
 
 type Tag = {
   id: string;
@@ -79,9 +79,7 @@ export default function PageCreatPost() {
         return res[0].id;
       });
 
-    router.push(
-      `http://localhost:3000/admin/preview-unpblished-post/${getCurrentPostId}`
-    );
+    router.push(`/admin/preview-unpblished-post/${getCurrentPostId}`);
   };
 
   const getAllTags = async () => {
@@ -95,7 +93,23 @@ export default function PageCreatPost() {
     return data;
   };
 
+  const getSession = async () => {
+    const response = await fetch('/api/auth/getSession', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const data = await response.json();
+    return data as SessionType;
+  };
+
   useEffect(() => {
+    getSession().then((data) => {
+      if (data.status !== 200)
+        router.push('/posts/createPost/error-creation-post');
+    });
+
     getAllTags()
       .then((data) => {
         setAllAvailablesTags(data);
@@ -103,9 +117,10 @@ export default function PageCreatPost() {
       .catch((error) => {
         console.error('Erreur lors de la récupération des tags :', error);
       });
-  }, []);
 
-  console.log(allAvailablesTags);
+    getSession().then((data) => console.log(data));
+  }, [router]);
+
   return (
     <div className="flex flex-col gap-4">
       <div>
