@@ -9,6 +9,7 @@ export const getAllPosts = async () => {
       postDescription: true,
       updatedAt: true,
       author: true,
+      tags: true,
     },
   });
 
