@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import {
   Card,
   CardContent,
@@ -15,7 +14,7 @@ export type CardPostProps = {
 
 export const CardPost = ({ article }: CardPostProps) => {
   return (
-    <Card className="flex flex-col justify-between h-full hover:bg-card-foreground hover:text-card transition-all">
+    <Card className="flex flex-col justify-between h-full hover:bg-card-foreground hover:text-card transition-all cursor-pointer">
       <CardHeader className="flex flex-col gap-1 m-0 mb-2 pb-0">
         <CardTitle>{article.title}</CardTitle>
         <CardDescription className="!m-0">
