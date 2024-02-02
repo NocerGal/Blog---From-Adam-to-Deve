@@ -3,6 +3,7 @@
 import React, { ReactNode, useState } from 'react';
 import Markdown from 'react-markdown';
 import style from './preview-markdown-styles.module.css';
+import CustomCodeBlock from './CodeComponent';
 
 type FormComponentType = {
   textPreview?: string;
@@ -13,7 +14,12 @@ export default function UpdatePostPreviewMarkdown(props: FormComponentType) {
     <div>
       <Markdown
         className={style.reactMarkDown}
-      >{`${props.textPreview}`}</Markdown>
+        components={{
+          code: CustomCodeBlock,
+        }}
+      >
+        {`${props.textPreview}`}
+      </Markdown>
     </div>
   );
 }

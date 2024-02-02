@@ -1,17 +1,60 @@
+.reactMarkDown * {
+  box-sizing: border-box;
+  font-size: 20px;
+}
+
 .reactMarkDown img {
   object-fit: cover;
   height: 40vh;
   object-position: center;
 }
 .reactMarkDown h1 {
-  font-size: 32px;
-  margin-bottom: 8px;
+  font-size: 36px;
+  @apply mb-6 mt-6;
 }
 .reactMarkDown h2 {
-  font-size: 28px;
-  margin-bottom: 8px;
+  font-size: 32px;
+  @apply mb-6 mt-6;
 }
+
+.reactMarkDown h3 {
+  font-size: 28px;
+  @apply mb-6 mt-6;
+}
+
+.reactMarkDown h4 {
+  font-size: 24px;
+  @apply mb-6;
+}
+
 .reactMarkDown p {
-  font-size: 16px;
-  margin-bottom: 8px;
+  font-size: 20px;
+  line-height: 32px;
+  @apply mb-4;
+}
+
+.reactMarkDown ul {
+  margin-left: 40px;
+  @apply ml-10 mb-4;
+}
+.reactMarkDown ul li {
+  list-style: inside;
+  @apply mb-2;
+}
+
+.reactMarkDown a {
+  text-decoration: underline;
+  @apply bg-secondary font-extralight;
+}
+
+.reactMarkDown em {
+  @apply italic;
+}
+
+.reactMarkDown strong {
+  @apply font-bold;
+}
+
+.reactMarkDown pre {
+  @apply mb-4 bg-none;
 }
