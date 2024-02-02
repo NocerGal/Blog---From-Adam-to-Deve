@@ -117,8 +117,6 @@ export default function PageCreatPost() {
       .catch((error) => {
         console.error('Erreur lors de la récupération des tags :', error);
       });
-
-    getSession().then((data) => console.log(data));
   }, [router]);
 
   return (
@@ -136,37 +134,35 @@ export default function PageCreatPost() {
           to write your article
         </p>
 
-        <form className="flex flex-col gap-4 h-[30vh]" onSubmit={handleSubmit}>
+        <form className="flex flex-col gap-4 h-[50vh]" onSubmit={handleSubmit}>
           <input
             id="postTitle"
             name="postTitle"
             type="text"
             defaultValue={titlePreview}
-            className="bg-secondary py-2 px-3 rounded-lg"
+            className="bg-secondary py-3 px-3 rounded-lg"
           />
           <input
             id="postImageUrl"
             name="postImageUrl"
             type="url"
             defaultValue="Insert image url. It's not mandatory."
-            className="bg-secondary py-2 px-3 rounded-lg"
+            className="bg-secondary py-3 px-3 rounded-lg"
           />
           <input
             id="postDescription"
             name="postDescription"
             type="text"
             defaultValue={postDescriptionPreview}
-            className="bg-secondary py-2 px-3 rounded-lg"
+            className="bg-secondary py-3 px-3 rounded-lg"
           />
           <select
             name="postTag"
             id="postTag"
             defaultValue={'Select a tag'}
-            className="bg-secondary py-2 px-3 rounded-lg"
+            className="bg-secondary py-3 px-3 rounded-lg"
           >
-            <option disabled selected>
-              Select a tag
-            </option>
+            <option disabled>Select a tag</option>
             {allAvailablesTags.map((tag) => (
               <option key={tag.id} value={tag.id}>
                 {tag.name}
@@ -192,7 +188,7 @@ export default function PageCreatPost() {
           </button>
         </form>
       </div>
-      <div>
+      <div className="w-full">
         <CreatePostPreviewMarkdown textPreview={textPreview} />
       </div>
     </div>
