@@ -22,24 +22,26 @@ export default async function Page() {
     <div>
       <div className="flex flex-col mb-8 items-center w-full">
         <h1 className="text-4xl mb-2">Dev Tips Fr</h1>
-        <h2 className="text-xl">Des tips en français</h2>
-        <h2 className="text-xl">et une fois par semaine!</h2>
+        <h2>Des tips en français</h2>
+        <h2>et une fois par semaine!</h2>
       </div>
       <div className="flex flex-col gap-4">
-        <div className="flex flex-col gap-2">
-          <p>
+        <div className="flex flex-col gap-2 mb-4">
+          <p className="text-xl">
             Bonjour! je m&apos;appelle Schenherr Luc et je suis développeur web
             orienté React et NextJs.
           </p>
-          <p>
+          <p className="text-xl">
             Je vous partagerai une fois par semaine des tutos et des tips sur
-            des sujets React.
+            des sujets liés au développement web.
+          </p>
+          <p className="text-xl">
+            Vous pourrez également poster vos propres articles sur ce blog.
+            Votre article une fois validé sera publié.
           </p>
         </div>
-        <div>
-          <div>
-            <h2>Derniers articles</h2>
-          </div>
+        <div className="mb-4">
+          <h2 className="mb-4">Last posts</h2>
           <div className="flex flex-col md:flex-row gap-2">
             {posts.slice(0, 3).map((post, index) => (
               <Link
@@ -53,16 +55,8 @@ export default async function Page() {
           </div>
         </div>
         <div>
-          <div>
-            <h2>All articles</h2>
-          </div>
-          <div>
-            {' '}
-            <div>
-              <span>Categories : </span>
-            </div>
-            <SortAllPosts allTags={getAllTags} posts={posts} link={Link} />
-          </div>
+          <h2 className="mb-4">All articles</h2>
+          <SortAllPosts allTags={getAllTags} posts={posts} link={Link} />
         </div>
       </div>
     </div>

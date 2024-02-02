@@ -19,7 +19,7 @@ export default async function pageAdmin() {
   const session = await getServerSession(authOptions);
 
   if (session === null || session.user.id === undefined) {
-    return;
+    redirect('/admin/error');
   }
 
   const getUserRole = await prisma.user.findUnique({

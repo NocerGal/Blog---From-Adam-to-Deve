@@ -7,8 +7,8 @@ import TriggerAuth from '../auth/TriggerAuth';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../../pages/api/auth/[...nextauth]';
 
-export default function Header() {
-  const session = getServerSession(authOptions);
+export default async function Header() {
+  const session = await getServerSession(authOptions);
 
   return (
     <header className="py-4 px-8">

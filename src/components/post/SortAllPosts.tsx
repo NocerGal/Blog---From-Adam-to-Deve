@@ -29,31 +29,29 @@ export function SortAllPosts(props: SortAllPostsTypes) {
 
   return (
     <div>
-      <div>
-        <div className="flex flex-wrap gap-4">
+      <div className="flex flex-wrap gap-4 mb-6">
+        <Button
+          onClick={(e) => setCategoryFiltered(e.currentTarget.innerText)}
+          className={'All' === categoryFiltered ? 'opacity-[0.85]' : ''}
+        >
+          All
+        </Button>
+        {props.allTags.map((tag) => (
           <Button
+            key={tag.id}
             onClick={(e) => setCategoryFiltered(e.currentTarget.innerText)}
-            className={'All' === categoryFiltered ? 'opacity-[0.85]' : ''}
+            className={tag.name === categoryFiltered ? 'opacity-[0.85]' : ''}
           >
-            All
+            {tag.name}
           </Button>
-          {props.allTags.map((tag) => (
-            <Button
-              key={tag.id}
-              onClick={(e) => setCategoryFiltered(e.currentTarget.innerText)}
-              className={tag.name === categoryFiltered ? 'opacity-[0.85]' : ''}
-            >
-              {tag.name}
-            </Button>
-          ))}
-        </div>
-        <div className="flex flex-col gap-4">
-          {filteredPosts.map((post) => (
-            <a href={`/posts/view-post/${post.id}`} key={post.id}>
-              <CardPost article={post} />
-            </a>
-          ))}
-        </div>
+        ))}
+      </div>
+      <div className="flex flex-col gap-6">
+        {filteredPosts.map((post) => (
+          <a href={`/posts/view-post/${post.id}`} key={post.id}>
+            <CardPost article={post} />
+          </a>
+        ))}
       </div>
     </div>
   );
