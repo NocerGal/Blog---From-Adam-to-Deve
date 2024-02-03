@@ -6,6 +6,9 @@ import { getAllPosts } from './postCard.query';
 import Link from 'next/link';
 import prisma from '@/lib/prisma';
 import { SortAllPosts } from '@/components/post/SortAllPosts';
+import Head from 'next/head';
+
+import { title } from 'process';
 
 export default async function Page() {
   const posts = await getAllPosts();
@@ -20,10 +23,14 @@ export default async function Page() {
 
   return (
     <div>
+      <Head>
+        <title>Test page Head</title>
+      </Head>
       <div className="flex flex-col mb-8 items-center w-full">
         <h1 className="text-4xl mb-2">Dev Tips Fr</h1>
         <h2>Des tips en français</h2>
         <h2>et une fois par semaine!</h2>
+        Hea
       </div>
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-2 mb-4">

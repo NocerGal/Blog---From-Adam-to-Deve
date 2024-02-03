@@ -7,11 +7,35 @@ import { LikePostButton } from '@/components/post/likePostButton';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../../../pages/api/auth/[...nextauth]';
 import { Session } from '@prisma/client';
+import Head from 'next/head';
+import { Metadata } from 'next';
+import {
+  getAllPostById,
+  getAllPostByIdType,
+} from '../../../../pages/api/getpostById';
+
+type MetaDataPropsType = {
+  params: { post: string };
+  searchParams?: { [key: string]: string | string[] | undefined };
+};
+
+export async function generateMetadata({
+  params,
+}: MetaDataPropsType): Promise<Metadata> {
+  const id = params?.post[0];
+
+  const postDatas = (await getAllPostById(id)) as getAllPostByIdType;
+
+  return {
+    title: id,
+    description: postDatas.postDescription,
+  };
+}
 
 export default async function postsPage({
   params,
 }: {
-  params: { post: string };
+  params: { post: string[] };
 }) {
   const getPostDatas = await prisma.post.findUnique({
     where: {
@@ -40,29 +64,34 @@ export default async function postsPage({
   >;
 
   return (
-    <div className="flex flex-col gap-12">
-      {getPostDatas.image && (
-        <Image
-          className="h-[48vh] object-cover object-center"
-          src={getPostDatas.image as string}
-          alt="image représentant le post"
-          width={1000}
-          height={1}
-        />
-      )}
-      <Markdown className={style.reactMarkDown}>{markdown}</Markdown>
+    <div>
+      <Head>
+        <title>{'testHead'}</title>
+      </Head>
+      <div className="flex flex-col gap-12">
+        {getPostDatas.image && (
+          <Image
+            className="h-[48vh] object-cover object-center"
+            src={getPostDatas.image as string}
+            alt="image représentant le post"
+            width={1000}
+            height={1}
+          />
+        )}
+        <Markdown className={style.reactMarkDown}>{markdown}</Markdown>
 
-      <div className="flex justify-end cursor-pointer">
-        <LikePostButton
-          checkUser={checkUserConnected}
-          userLike={!userLikeBoolean}
-          postId={params.post[0]}
-          likeCount={
-            getPostDatas === null || getPostDatas === undefined
-              ? 9999
-              : getPostDatas.Like.length
-          }
-        />
+        <div className="flex justify-end cursor-pointer">
+          <LikePostButton
+            checkUser={checkUserConnected}
+            userLike={!userLikeBoolean}
+            postId={params.post[0]}
+            likeCount={
+              getPostDatas === null || getPostDatas === undefined
+                ? 9999
+                : getPostDatas.Like.length
+            }
+          />
+        </div>
       </div>
     </div>
   );
