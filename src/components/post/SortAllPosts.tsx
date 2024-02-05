@@ -9,26 +9,21 @@ import { CardPost } from '../../../app/CardPost';
 type SortAllPostsTypes = {
   allTags: Tag[];
   posts: postType[];
-  link: any;
 };
 
-export function SortAllPosts(props: SortAllPostsTypes) {
+export function SortAllPosts({ allTags, posts }: SortAllPostsTypes) {
   const [categoryFiltered, setCategoryFiltered] = useState('All');
 
-  const filteredPosts = props.posts.filter((post) => {
+  const filteredPosts = posts.filter((post) => {
     if (categoryFiltered == 'All') {
       return true;
     } else {
-      if (post.tags && post.tags.length > 0) {
-        return post.tags[0].name === categoryFiltered;
-      } else {
-        return false;
-      }
+      return post.tags[0].name === categoryFiltered;
     }
   });
 
   return (
-    <div>
+    <>
       <div className="flex flex-wrap gap-4 mb-6">
         <Button
           onClick={(e) => setCategoryFiltered(e.currentTarget.innerText)}
@@ -36,7 +31,7 @@ export function SortAllPosts(props: SortAllPostsTypes) {
         >
           All
         </Button>
-        {props.allTags.map((tag) => (
+        {allTags.map((tag) => (
           <Button
             key={tag.id}
             onClick={(e) => setCategoryFiltered(e.currentTarget.innerText)}
@@ -53,6 +48,6 @@ export function SortAllPosts(props: SortAllPostsTypes) {
           </a>
         ))}
       </div>
-    </div>
+    </>
   );
 }

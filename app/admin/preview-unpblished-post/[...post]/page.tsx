@@ -1,18 +1,19 @@
-import React from 'react';
-import Markdown from 'react-markdown';
-import style from './markdown-styles.module.css';
 import Image from 'next/image';
 import prisma from '@/lib/prisma';
-import { LikePostButton } from '@/components/post/likePostButton';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../../../pages/api/auth/[...nextauth]';
-import { Session } from '@prisma/client';
+import StyledMarkdown from '@/components/markdown-preview/StyledMarkdown';
+import { redirect } from 'next/navigation';
 
 export default async function postsPage({
   params,
 }: {
   params: { post: string };
 }) {
+  const session = await getServerSession(authOptions);
+
+  if (session === null || session === undefined) redirect('/admin/error');
+
   const getPostDatas = await prisma.post.findUnique({
     where: {
       id: params.post[0],
@@ -33,11 +34,6 @@ export default async function postsPage({
     like.userId === session?.user.id;
   });
 
-  const checkUserConnected = (await getServerSession(authOptions)) as Omit<
-    Session,
-    'sessionToken'
-  >;
-
   return (
     <div className="flex flex-col gap-12">
       <h1>This article is not published. It has to be reviewed by an admin</h1>
@@ -50,20 +46,7 @@ export default async function postsPage({
           height={1}
         />
       )}
-      <Markdown className={style.reactMarkDown}>{markdown}</Markdown>
-
-      <div className="flex justify-end cursor-pointer">
-        <LikePostButton
-          checkUser={checkUserConnected}
-          userLike={!userLikeBoolean}
-          postId={params.post[0]}
-          likeCount={
-            getPostDatas === null || getPostDatas === undefined
-              ? 0
-              : getPostDatas.Like.length
-          }
-        />
-      </div>
+      <StyledMarkdown textPreview={markdown}></StyledMarkdown>
     </div>
   );
 }

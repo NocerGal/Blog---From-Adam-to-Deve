@@ -1,7 +1,6 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { VariantProps } from 'class-variance-authority';
 
 type ButtonClientType = {
   unpublishedPostId: string;
@@ -17,13 +16,18 @@ type ButtonClientType = {
     | undefined;
 };
 
-export function ButtonClient(props: ButtonClientType) {
+export function ButtonClient({
+  onClickFunction,
+  unpublishedPostId,
+  buttonText,
+  variant,
+}: ButtonClientType) {
   return (
     <Button
-      onClick={() => props.onClickFunction(props.unpublishedPostId)}
-      variant={props.variant}
+      onClick={() => onClickFunction(unpublishedPostId)}
+      variant={variant}
     >
-      {props.buttonText}
+      {buttonText}
     </Button>
   );
 }

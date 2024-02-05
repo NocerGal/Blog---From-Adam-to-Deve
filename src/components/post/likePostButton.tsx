@@ -16,7 +16,7 @@ export function LikePostButton(props: LikePostButtonProps) {
   const [userLiked, setUserLiked] = useState(props.userLike);
   const [likeCount, setLikeCount] = useState(props.likeCount);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-  const [displayLoginButton, setDisplayLoginButton] = useState(false);
+  const [, setDisplayLoginButton] = useState(false);
 
   const incrementLike = async () => {
     await fetch('/api/like/incrementLike', {
@@ -49,6 +49,7 @@ export function LikePostButton(props: LikePostButtonProps) {
 
   return (
     <div className="flex flex-col">
+      {/* If no session, then propose to connect in order to add a like like */}
       {props.checkUser == null ? (
         <TriggerAuth
           alertTitle="Connect with Github to like a post"

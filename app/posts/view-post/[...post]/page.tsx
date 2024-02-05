@@ -3,7 +3,7 @@ import Markdown from 'react-markdown';
 import style from './markdown-styles.module.css';
 import Image from 'next/image';
 import prisma from '@/lib/prisma';
-import { LikePostButton } from '@/components/post/likePostButton';
+import { LikePostButton } from '@/components/post/LikePostButton';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../../../pages/api/auth/[...nextauth]';
 import { Session } from '@prisma/client';

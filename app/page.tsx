@@ -1,18 +1,15 @@
 import { CardPost } from './CardPost';
-import { getServerSession } from 'next-auth';
 import React from 'react';
-import { authOptions } from '../pages/api/auth/[...nextauth]';
 import { getAllPosts } from './postCard.query';
 import Link from 'next/link';
 import prisma from '@/lib/prisma';
 import { SortAllPosts } from '@/components/post/SortAllPosts';
 import Head from 'next/head';
 
-import { title } from 'process';
-
 export default async function Page() {
   const posts = await getAllPosts();
 
+  // return all tags that has been associated at least once to a post
   const getAllTags = await prisma.tag.findMany({
     where: {
       posts: {
@@ -63,7 +60,7 @@ export default async function Page() {
         </div>
         <div>
           <h2 className="mb-4">All articles</h2>
-          <SortAllPosts allTags={getAllTags} posts={posts} link={Link} />
+          <SortAllPosts allTags={getAllTags} posts={posts} />
         </div>
       </div>
     </div>

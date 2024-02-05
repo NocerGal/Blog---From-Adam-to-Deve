@@ -1,7 +1,7 @@
 'use client';
 
+import UpdatePostPreviewMarkdown from '@/components/markdown-preview/UpdatePostPreviewMarkdown';
 import React, { FormEvent, useState, useRef } from 'react';
-import UpdatePostPreviewMarkdown from '@/components/markdown-preview/PreviewMarkdown';
 
 type formUpdatePostTypes = {
   postId: string;
@@ -38,7 +38,7 @@ const FormUpdatePost = (props: formUpdatePostTypes) => {
   };
 
   return (
-    <div>
+    <>
       <form
         className="flex flex-col gap-4 h-[30vh]"
         onSubmit={handleUpdatePost}
@@ -77,7 +77,7 @@ const FormUpdatePost = (props: formUpdatePostTypes) => {
         </button>
       </form>
       <UpdatePostPreviewMarkdown textPreview={postContent} />
-    </div>
+    </>
   );
 };
 

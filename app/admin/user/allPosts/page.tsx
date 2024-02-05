@@ -1,12 +1,6 @@
 export type pageAdminProps = {};
 
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import React from 'react';
 import { authOptions } from '../../../../pages/api/auth/[...nextauth]';
 import prisma from '@/lib/prisma';
@@ -17,7 +11,6 @@ import Link from 'next/link';
 export default async function pageAdmin() {
   const session = await getServerSession(authOptions);
 
-  console.log(session);
   if (session === null || session.user.id === undefined) {
     return;
   }

@@ -8,7 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { HoverCardContent } from '@/components/ui/hover-card';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
