@@ -1,40 +1,162 @@
-import Markdown from 'react-markdown';
-import style from './preview-markdown-styles.module.css';
-import rehypeHighlight from 'rehype-highlight';
-import remarkGfm from 'remark-gfm';
+'use client';
 
-import CustomCodeBlock from './CodeComponent';
-import SyntaxHighlighter from 'react-syntax-highlighter/dist/esm/default-highlight';
-import { materialDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import Link from 'next/link';
+import { FormEvent, useState } from 'react';
+import { Tag } from '@prisma/client';
+import { z } from 'zod';
+import { useRouter } from 'next/navigation';
+import StyledMarkdown from './StyledMarkdown';
 
-type FormComponentType = {
-  textPreview: string;
+import { zodResolver } from '@hookform/resolvers/zod';
+
+type FormSchema = {
+  title: string;
+  imageUrl: string;
+  postDescription: string;
+  tag: string;
+  content: string;
 };
 
-export default function CreatePostPreviewMarkdown(props: FormComponentType) {
-  const markdown = `${props.textPreview}`;
+export default function CreatePostPreviewMarkdown() {
+  const router = useRouter();
+
+  const [titlePreview] = useState('Tape your title');
+  const [postDescriptionPreview] = useState('Tape your post description');
+  const [textPreview, setTextPreview] = useState('Tape your text');
+  const [allAvailablesTags] = useState<Tag[]>([]);
+
+  const ZodFormSchema = z.object({
+    title: z.string().min(8).max(55),
+    imageUrl: z.string().url().optional().or(z.literal('')),
+    postDescription: z.string().min(20).max(150),
+    tag: z.string(),
+    content: z.string().min(100),
+  });
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+
+    const title = formData.get('postTitle') as string;
+    const imageUrl = formData.get('postImageUrl') as string;
+    const postDescription = formData.get('postDescription') as string;
+    const tag = formData.get('postTag') as string;
+    const content = formData.get('postContent') as string;
+
+    const safeDataTosend = ZodFormSchema.safeParse({
+      title,
+      imageUrl,
+      postDescription,
+      tag,
+      content,
+    });
+
+    if (!safeDataTosend.success) {
+      console.log('Error send data');
+    } else {
+      await fetch('/api/createPost', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(safeDataTosend.data),
+      });
+
+      const getCurrentPostId = await fetch(
+        `/api/getPostByTitle?postTitle=${encodeURIComponent(title)}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+        .then((res) => res.json())
+        .then((res) => {
+          return res[0].id;
+        });
+
+      router.push(`/admin/preview-unpblished-post/${getCurrentPostId}`);
+    }
+  };
 
   return (
-    <div>
+    <div className="flex flex-col gap-4">
       <div>
-        <Markdown
-          className={style.reactMarkDown}
-          components={{
-            code({ node, inline, className, children, ...props }: any) {
-              const match = /language-(\w+)/.exec(className || '');
+        <p className="mb-3">
+          Create your article with markdown. Check this{' '}
+          <Link
+            className="underline hover:text-border"
+            href="https://remarkjs.github.io/react-markdown/"
+            target="_blank"
+          >
+            example
+          </Link>{' '}
+          to write your article
+        </p>
 
-              return !inline && match ? (
-                <CustomCodeBlock>{children}</CustomCodeBlock>
-              ) : (
-                <code style={materialDark} {...props}>
-                  {children}
-                </code>
-              );
-            },
-          }}
-        >
-          {markdown}
-        </Markdown>
+        <form className="flex flex-col gap-4 h-[50vh]" onSubmit={handleSubmit}>
+          <input
+            id="postTitle"
+            name="postTitle"
+            type="text"
+            placeholder={titlePreview}
+            className="bg-secondary py-3 px-3 rounded-lg"
+          />
+
+          <input
+            id="postImageUrl"
+            name="postImageUrl"
+            type="url"
+            placeholder="Insert image url. It's not mandatory"
+            className="bg-secondary py-3 px-3 rounded-lg"
+          />
+
+          <input
+            id="postDescription"
+            name="postDescription"
+            type="text"
+            placeholder={postDescriptionPreview}
+            className="bg-secondary py-3 px-3 rounded-lg"
+          />
+
+          <select
+            name="postTag"
+            id="postTag"
+            defaultValue={'Select a tag'}
+            className="bg-secondary py-3 px-3 rounded-lg"
+          >
+            <option disabled>Select a tag</option>
+            <option value={'12345'}>Redux</option>
+            {allAvailablesTags.map((tag) => (
+              <option key={tag.id} value={tag.id}>
+                {tag.name}
+              </option>
+            ))}
+          </select>
+
+          <textarea
+            id="postContent"
+            name="postContent"
+            onChange={(e) => setTextPreview(e.target.value)}
+            className="resize-none h-full w-full bg-secondary py-2 px-3 rounded-lg"
+            placeholder={textPreview}
+            onSubmit={(e) => {
+              e.preventDefault();
+            }}
+          />
+
+          <button
+            type="submit"
+            className="bg-muted-foreground max-w-[140px] rounded-lg p-1"
+          >
+            Submit new Post
+          </button>
+        </form>
+      </div>
+      <div className="w-full">
+        <StyledMarkdown textPreview={textPreview} />
       </div>
     </div>
   );
