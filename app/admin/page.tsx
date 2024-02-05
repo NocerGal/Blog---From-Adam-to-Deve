@@ -216,13 +216,13 @@ export default async function pageAdmin() {
                       <ButtonClient
                         onClickFunction={handlePublishPost}
                         buttonText="Publish post"
-                        unpublishedPostId={unpublishedPost.id}
+                        postId={unpublishedPost.id}
                         variant={'default'}
                       />
                       <ButtonClient
                         onClickFunction={handleDeletePost}
                         buttonText="Delete post"
-                        unpublishedPostId={unpublishedPost.id}
+                        postId={unpublishedPost.id}
                         variant={'destructive'}
                       />
                     </div>

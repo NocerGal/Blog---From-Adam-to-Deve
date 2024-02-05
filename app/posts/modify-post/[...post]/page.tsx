@@ -3,9 +3,8 @@ import Link from 'next/link';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../../../pages/api/auth/[...nextauth]';
 import prisma from '@/lib/prisma';
-import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
 import FormUpdatePost from './FormUpdatePost';
+import { revalidatePath } from 'next/cache';
 
 export default async function PageCreatPost({
   params,
@@ -51,28 +50,10 @@ export default async function PageCreatPost({
     return;
   }
 
-  const updatePostDatas = async (formData: FormData) => {
+  const handleRevalidateAdminPath = async () => {
     'use server';
-
-    const postTitle = String(formData.get('postTitle'));
-    const postDescription = String(formData.get('postDescription'));
-    const postContent = String(formData.get('postContent'));
-
-    await prisma.post.update({
-      where: {
-        id: getPostDatas.id,
-      },
-      data: {
-        title: postTitle,
-        postDescription: postDescription,
-        content: postContent,
-      },
-    });
-
-    revalidatePath(`/posts/modify-post/${params.post}`);
-    redirect(`/posts/modify-post/${params.post}`);
+    revalidatePath('/admin');
   };
-
   return (
     <div className="flex flex-col gap-4">
       <div>
@@ -92,6 +73,7 @@ export default async function PageCreatPost({
           postTitle={getPostDatas.title}
           postDescription={getPostDatas.postDescription}
           postContent={getPostDatas.content}
+          revalidatePath={handleRevalidateAdminPath}
         />
       </div>
     </div>

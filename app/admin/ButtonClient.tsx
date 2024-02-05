@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 
 type ButtonClientType = {
-  unpublishedPostId: string;
+  postId: string;
   buttonText: string;
   onClickFunction: (postId: string) => void;
   variant?:
@@ -18,15 +18,12 @@ type ButtonClientType = {
 
 export function ButtonClient({
   onClickFunction,
-  unpublishedPostId,
+  postId,
   buttonText,
   variant,
 }: ButtonClientType) {
   return (
-    <Button
-      onClick={() => onClickFunction(unpublishedPostId)}
-      variant={variant}
-    >
+    <Button onClick={() => onClickFunction(postId)} variant={variant}>
       {buttonText}
     </Button>
   );

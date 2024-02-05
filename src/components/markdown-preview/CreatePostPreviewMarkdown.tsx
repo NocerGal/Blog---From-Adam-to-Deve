@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import StyledMarkdown from './StyledMarkdown';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { revalidatePath } from 'next/cache';
 
 type FormSchema = {
   title: string;
@@ -17,7 +18,13 @@ type FormSchema = {
   content: string;
 };
 
-export default function CreatePostPreviewMarkdown() {
+type CreatePostPreviewMarkdownPropsTypes = {
+  revalidateAdminPath: () => void;
+};
+
+export default function CreatePostPreviewMarkdown({
+  revalidateAdminPath,
+}: CreatePostPreviewMarkdownPropsTypes) {
   const router = useRouter();
 
   const [titlePreview] = useState('Tape your title');
@@ -76,7 +83,7 @@ export default function CreatePostPreviewMarkdown() {
         .then((res) => {
           return res[0].id;
         });
-
+      revalidateAdminPath();
       router.push(`/admin/preview-unpblished-post/${getCurrentPostId}`);
     }
   };

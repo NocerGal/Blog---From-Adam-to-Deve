@@ -1,6 +1,8 @@
 'use client';
 
-import UpdatePostPreviewMarkdown from '@/components/markdown-preview/UpdatePostPreviewMarkdown';
+import StyledMarkdown from '@/components/markdown-preview/StyledMarkdown';
+import { useRouter } from 'next/navigation';
+
 import React, { FormEvent, useState, useRef } from 'react';
 
 type formUpdatePostTypes = {
@@ -8,12 +10,17 @@ type formUpdatePostTypes = {
   postTitle: string;
   postDescription: string;
   postContent: string;
+  revalidatePath: () => void;
 };
 
-const FormUpdatePost = (props: formUpdatePostTypes) => {
-  const [postTitle, setPostTitle] = useState(props.postTitle);
-  const [postDescription, setPostDescription] = useState(props.postDescription);
-  const [postContent, setPostContent] = useState(props.postContent);
+const FormUpdatePost = ({
+  postTitle,
+  postDescription,
+  postContent,
+  postId,
+  revalidatePath,
+}: formUpdatePostTypes) => {
+  const router = useRouter();
 
   const postTitleInputRef = useRef<HTMLInputElement>(null);
   const postDescriptionInputRef = useRef<HTMLInputElement>(null);
@@ -22,7 +29,7 @@ const FormUpdatePost = (props: formUpdatePostTypes) => {
   const handleUpdatePost = async (event: FormEvent) => {
     event.preventDefault();
     const dataToSend = {
-      postId: props.postId[0],
+      postId: postId[0],
       title: postTitleInputRef.current?.value,
       postDescription: postDescriptionInputRef.current?.value,
       content: postContentInputRef.current?.value,
@@ -35,6 +42,8 @@ const FormUpdatePost = (props: formUpdatePostTypes) => {
       },
       body: JSON.stringify(dataToSend),
     });
+    revalidatePath();
+    router.push('/admin');
   };
 
   return (
@@ -49,8 +58,9 @@ const FormUpdatePost = (props: formUpdatePostTypes) => {
           name="postTitle"
           type="text"
           defaultValue={postTitle}
+          placeholder="Post title"
           className="bg-secondary py-2 px-3 rounded-lg"
-          onChange={(e) => setPostTitle(e.currentTarget.value)}
+          onChange={(e) => {}}
         />
         <input
           ref={postDescriptionInputRef}
@@ -58,8 +68,8 @@ const FormUpdatePost = (props: formUpdatePostTypes) => {
           name="postDescription"
           type="text"
           defaultValue={postDescription}
+          placeholder="Post description"
           className="bg-secondary py-2 px-3 rounded-lg"
-          onChange={(e) => setPostDescription(e.currentTarget.value)}
         />
         <textarea
           ref={postContentInputRef}
@@ -67,7 +77,7 @@ const FormUpdatePost = (props: formUpdatePostTypes) => {
           name="postContent"
           className="resize-none h-full w-full bg-secondary py-2 px-3 rounded-lg"
           defaultValue={postContent}
-          onChange={(e) => setPostContent(e.currentTarget.value)}
+          placeholder="Post content"
         />
         <button
           type="submit"
@@ -76,7 +86,7 @@ const FormUpdatePost = (props: formUpdatePostTypes) => {
           Modify Post
         </button>
       </form>
-      <UpdatePostPreviewMarkdown textPreview={postContent} />
+      <StyledMarkdown textPreview={postContent} />
     </>
   );
 };
