@@ -8,7 +8,11 @@ import { getServerSession } from 'next-auth';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
-export default async function pageAdmin() {
+import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
+import { ButtonClient } from '../../ButtonClient';
+
+export default async function PageAllUserPosts() {
   const session = await getServerSession(authOptions);
 
   if (session === null || session.user.id === undefined) {
@@ -24,6 +28,19 @@ export default async function pageAdmin() {
       posts: true,
     },
   });
+
+  const handleDeletePost = async (postId: string) => {
+    'use server';
+
+    await prisma.post.delete({
+      where: {
+        id: postId,
+      },
+    });
+
+    revalidatePath('/admin');
+    redirect('/admin');
+  };
 
   return (
     <div>
@@ -63,10 +80,17 @@ export default async function pageAdmin() {
                       </Link>
                     </Button>
                     <Button variant={'outline'}>
-                      <Link href={`/posts/view-post/${post.id}`}>
+                      <Link href={`/posts/modify-post/${post.id}`}>
                         Modify post
                       </Link>
                     </Button>
+
+                    <ButtonClient
+                      postId={post.id}
+                      onClickFunction={handleDeletePost}
+                      variant="destructive"
+                      buttonText="Delete post"
+                    />
                   </div>
                 </CardContent>
               </Card>
