@@ -1,4 +1,4 @@
-import CreatePostPreviewMarkdown from '@/components/markdown-preview/CreatePostPreviewMarkdown';
+import CreatePostPreviewMarkdown from './CreatePostPreviewMarkdown';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../../pages/api/auth/[...nextauth]';
 import { redirect } from 'next/navigation';
