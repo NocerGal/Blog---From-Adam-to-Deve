@@ -31,24 +31,28 @@ export async function WriterInformations({
   return (
     <Card>
       <CardContent className="pt-6">
-        <div className="flex flex-col gap-4">
-          <h2>Author informations</h2>
-          <div className="flex gap-8">
-            <img
-              src={
-                getAuthorDatas?.image ??
-                `https://api.dicebear.com/7.x/lorelei/svg?seed=${hashedId}`
-              }
-              alt="picture of the author"
-              title="picture of the author"
-              className="flex rounded-full h-36 w-36 object-fill"
-            />
-            <div className="flex flex-col gap-2 w-full">
-              <p className="text-2xl">{getAuthorDatas?.name}</p>
-              <p>{getAuthorDatas?.selfDescription}</p>
+        {getAuthorDatas?.selfDescription ? (
+          <div className="flex flex-col gap-4">
+            <h2>Author informations</h2>
+            <div className="flex gap-8">
+              <img
+                src={
+                  getAuthorDatas?.image ??
+                  `https://api.dicebear.com/7.x/lorelei/svg?seed=${hashedId}`
+                }
+                alt="picture of the author"
+                title="picture of the author"
+                className="flex rounded-full h-36 w-36 object-fill"
+              />
+              <div className="flex flex-col gap-2 w-full">
+                <p className="text-2xl">{getAuthorDatas?.name}</p>
+                <p>{getAuthorDatas?.selfDescription}</p>
+              </div>
             </div>
           </div>
-        </div>
+        ) : (
+          <span>Author : {getAuthorDatas?.name}</span>
+        )}
       </CardContent>
     </Card>
   );
