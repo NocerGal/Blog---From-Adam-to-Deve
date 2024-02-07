@@ -16,13 +16,20 @@ export default async function handlerUpdatePost(
     }
 
     try {
-      const like = await prisma.like.create({
+      const postId = req.body;
+      const userId = session.user.id;
+
+      const post = await prisma.post.update({
+        where: {
+          id: postId,
+        },
         data: {
-          postId: req.body,
-          userId: session.user.id,
+          likedBy: {
+            connect: [{ id: userId }],
+          },
         },
       });
-      res.status(200).json(like);
+      res.status(200).json(post);
     } catch (error) {
       console.log('API LIKE DOESNT WORK');
       res.status(500).json({ error: 'Error API' });

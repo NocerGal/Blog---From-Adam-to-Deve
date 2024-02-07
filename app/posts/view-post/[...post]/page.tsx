@@ -3,16 +3,16 @@ import Markdown from 'react-markdown';
 import style from './markdown-styles.module.css';
 import Image from 'next/image';
 import prisma from '@/lib/prisma';
-import { LikePostButton } from '@/components/post/LikePostButton';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../../../pages/api/auth/[...nextauth]';
 import { Session } from '@prisma/client';
-import Head from 'next/head';
 import { Metadata } from 'next';
 import {
   getAllPostById,
   getAllPostByIdType,
 } from '../../../../pages/api/getpostById';
+import { LikePostButton } from '@/components/post/likePostButton';
+import { revalidatePath } from 'next/cache';
 
 type MetaDataPropsType = {
   params: { post: string };
@@ -42,9 +42,9 @@ export default async function postsPage({
       id: params.post[0],
     },
     select: {
-      Like: true,
       content: true,
       image: true,
+      likedBy: true,
     },
   });
 
@@ -52,46 +52,58 @@ export default async function postsPage({
 
   const markdown = getPostDatas.content as string;
 
-  const userLikeBoolean = !getPostDatas?.Like.some(async (like) => {
-    // session dans le some, car sinon, ne permet pas à un utilisateur non connecté de voir le post
-    const session = await getServerSession(authOptions);
-    like.userId === session?.user.id;
-  });
-
   const checkUserConnected = (await getServerSession(authOptions)) as Omit<
     Session,
     'sessionToken'
   >;
 
-  return (
-    <div>
-      <Head>
-        <title>{'testHead'}</title>
-      </Head>
-      <div className="flex flex-col gap-12">
-        {getPostDatas.image && (
-          <Image
-            className="h-[48vh] object-cover object-center"
-            src={getPostDatas.image as string}
-            alt="image représentant le post"
-            width={1000}
-            height={1}
-          />
-        )}
-        <Markdown className={style.reactMarkDown}>{markdown}</Markdown>
+  const handleRevalidatPath = async () => {
+    'use server';
+    revalidatePath(`/posts/view-post/${params.post[0]}`);
+  };
 
-        <div className="flex justify-end cursor-pointer">
-          <LikePostButton
-            checkUser={checkUserConnected}
-            userLike={!userLikeBoolean}
-            postId={params.post[0]}
-            likeCount={
-              getPostDatas === null || getPostDatas === undefined
-                ? 9999
-                : getPostDatas.Like.length
-            }
-          />
-        </div>
+  // const getUserLikeBoolean = async () => {
+  //   return await fetch(
+  //     `/api/like/getUserLikeBoolean?postId=${encodeURIComponent(
+  //       params.post[0]
+  //     )}`,
+  //     {
+  //       method: 'GET',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //     }
+  //   )
+  //     .then((res) => res.json())
+  //     .then((res) => {
+  //       res;
+  //     });
+  // };
+
+  return (
+    <div className="flex flex-col gap-12">
+      {getPostDatas.image && (
+        <Image
+          className="h-[48vh] object-cover object-center"
+          src={getPostDatas.image as string}
+          alt="image représentant le post"
+          width={1000}
+          height={1}
+        />
+      )}
+      <Markdown className={style.reactMarkDown}>{markdown}</Markdown>
+
+      <div className="flex justify-end cursor-pointer">
+        <LikePostButton
+          checkUser={checkUserConnected}
+          postId={params.post[0]}
+          likeCounter={
+            getPostDatas === null || getPostDatas === undefined
+              ? 9999
+              : getPostDatas.likedBy.length
+          }
+          reValidatePath={handleRevalidatPath}
+        />
       </div>
     </div>
   );

@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import prisma from '@/lib/prisma';
 import { ButtonClient } from './ButtonClient';
+import { UpdateAdminDatasForm } from './UpdateAdminDatasForm';
 
 export default async function pageAdmin() {
   const session = await getServerSession(authOptions);
@@ -21,12 +22,15 @@ export default async function pageAdmin() {
     redirect('/admin/error');
   }
 
-  const getUserRole = await prisma.user.findUnique({
+  const getUserDatas = await prisma.user.findUnique({
     where: {
       id: session.user.id,
     },
     select: {
       role: true,
+      selfDescription: true,
+      name: true,
+      image: true,
     },
   });
 
@@ -37,43 +41,6 @@ export default async function pageAdmin() {
   });
 
   const userPosts = await getUserPosts(session.user.id);
-
-  async function updateUserDatas(formData: FormData) {
-    'use server';
-    const session = await getServerSession(authOptions);
-    const FormSchema = z.object({
-      name: z.string().min(3).max(10),
-      image: z.string().url(),
-    });
-
-    const name = String(formData.get('userName'));
-    const image = String(formData.get('urlImage'));
-
-    const safeData = FormSchema.safeParse({
-      name,
-      image,
-    });
-
-    if (!safeData.success) {
-      const searchParams = new URLSearchParams();
-      searchParams.set(
-        'error',
-        'Invalid data. Image must be an URL and name must be between 3 and 40 characters.'
-      );
-
-      redirect('/admin/errordatas');
-    }
-
-    await prisma.user.update({
-      where: {
-        id: session?.user.id,
-      },
-      data: safeData.data,
-    });
-
-    revalidatePath('/admin');
-    redirect('/admin');
-  }
 
   const handlePublishPost = async (postId: string) => {
     'use server';
@@ -101,6 +68,10 @@ export default async function pageAdmin() {
     redirect('/admin');
   };
 
+  const handlRevalidatePath = async () => {
+    'use server';
+    revalidatePath('/admin');
+  };
   return (
     <div className="flex flex-col gap-6">
       <div>
@@ -154,43 +125,15 @@ export default async function pageAdmin() {
               <h2>Your informations</h2>
             </CardHeader>
             <CardContent>
-              <form action={updateUserDatas}>
-                <div className="mb-4">
-                  <div className="flex flex-col gap-2">
-                    <div>
-                      <Label htmlFor="userName">Username</Label>
-                      <Input
-                        defaultValue={session?.user?.name ?? 'Your username'}
-                        name="userName"
-                        id="userName"
-                      />
-                    </div>
-                    <div>
-                      <Label>User Type</Label>
-                      <Input type="text" value={getUserRole?.role} disabled />
-                    </div>
-                    <div>
-                      <Label htmlFor="urlImage">Image</Label>
-                      <Input
-                        defaultValue={session?.user?.image ?? 'no URL'}
-                        name="urlImage"
-                        id="urlImage"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <button
-                  type="submit"
-                  className="bg-muted rounded-[0.5rem] py-1 px-2 hover:bg-muted-foreground hover:text-foreground transition-all"
-                >
-                  Save changes
-                </button>
-              </form>
+              <UpdateAdminDatasForm
+                userDatas={getUserDatas}
+                revalidathPath={handlRevalidatePath}
+              />
             </CardContent>
           </Card>
         </div>
       </div>
-      {getUserRole?.role == 'ADMIN' && (
+      {getUserDatas?.role == 'ADMIN' && (
         <div>
           <Card className="px-4 pb-6">
             <CardHeader>

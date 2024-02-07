@@ -3,11 +3,11 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '../auth/[...nextauth]';
 import prisma from '@/lib/prisma';
 
-export default async function handlerUpdatePost(
+export default async function getUserLikeBoolean(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method === 'POST') {
+  if (req.method === 'GET') {
     const session = await getServerSession(req, res, authOptions);
 
     if (!session || !session.user.id) {
@@ -17,19 +17,22 @@ export default async function handlerUpdatePost(
 
     try {
       const userId = session.user.id;
-      const postId = req.body;
+      const postId = req.query.postId as string;
 
-      const post = await prisma.post.update({
+      const post = await prisma.post.findUnique({
         where: {
           id: postId,
         },
-        data: {
-          likedBy: {
-            disconnect: [{ id: userId }],
-          },
+        select: {
+          likedBy: true,
         },
       });
-      res.status(200).json(postId);
+
+      const getUserLikeBoolean = post?.likedBy.some((post) => {
+        return post.id === userId;
+      });
+
+      res.status(200).json(getUserLikeBoolean);
     } catch (error) {
       console.log('API LIKE DOESNT WORK');
       res.status(500).json({ error: 'Error API' });

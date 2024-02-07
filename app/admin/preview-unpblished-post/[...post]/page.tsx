@@ -19,7 +19,6 @@ export default async function postsPage({
       id: params.post[0],
     },
     select: {
-      Like: true,
       content: true,
       image: true,
     },
@@ -29,10 +28,10 @@ export default async function postsPage({
 
   const markdown = getPostDatas.content as string;
 
-  const userLikeBoolean = !getPostDatas?.Like.some(async (like) => {
-    const session = await getServerSession(authOptions);
-    like.userId === session?.user.id;
-  });
+  // const userLikeBoolean = !getPostDatas?.Like.some(async (like) => {
+  //   const session = await getServerSession(authOptions);
+  //   like.userId === session?.user.id;
+  // });
 
   return (
     <div className="flex flex-col gap-12">
