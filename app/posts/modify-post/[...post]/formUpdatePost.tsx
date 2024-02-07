@@ -2,9 +2,9 @@
 
 import StyledMarkdown from '@/components/markdown-preview/StyledMarkdown';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
-import React, { FormEvent, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { ZodType, z } from 'zod';
 
@@ -40,7 +40,7 @@ const FormUpdatePost = ({
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<FormSchema>({
     resolver: zodResolver(zodFormSchema),
   });
@@ -117,9 +117,9 @@ const FormUpdatePost = ({
         </div>
         <button
           type="submit"
-          className="bg-muted-foreground max-w-[140px] rounded-lg p-1"
+          className="flex justify-center bg-muted-foreground max-w-[140px] rounded-lg p-1"
         >
-          Modify Post
+          {isSubmitting ? <Loader2 className="animate-spin" /> : 'Modify Post'}
         </button>
       </form>
       <StyledMarkdown textPreview={postContent} />

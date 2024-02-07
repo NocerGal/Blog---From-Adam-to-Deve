@@ -95,7 +95,7 @@ export function LikePostButton({
                 <Heart
                   className={`${
                     userLiked ? 'fill-transparent' : 'fill-white'
-                  } hover:fill-white transition-all`}
+                  } hover:fill-white transition-all cursor-pointer`}
                   size={18}
                 ></Heart>
               </div>

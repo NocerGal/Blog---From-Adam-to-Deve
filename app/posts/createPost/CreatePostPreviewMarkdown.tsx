@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import StyledMarkdown from '../../../src/components/markdown-preview/StyledMarkdown';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Loader2 } from 'lucide-react';
 
 type FormSchema = {
   title: string;
@@ -47,7 +48,7 @@ export default function CreatePostPreviewMarkdown({
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<FormSchema>({
     resolver: zodResolver(ZodFormSchema),
   });
@@ -77,9 +78,8 @@ export default function CreatePostPreviewMarkdown({
     revalidateAdminPath();
 
     router.push(`/admin/preview-unpblished-post/${getCurrentPostId}`);
-    // router.push(`/`);
   };
-
+  console.log(isSubmitting);
   return (
     <div className="flex flex-col gap-4">
       <div>
@@ -96,7 +96,7 @@ export default function CreatePostPreviewMarkdown({
         </p>
 
         <form
-          className="flex flex-col gap-4 h-[50vh]"
+          className="flex flex-col gap-4 h-[6 0vh]"
           onSubmit={handleSubmit(handleSubmitForm)}
         >
           <div className="flex flex-col">
@@ -186,9 +186,13 @@ export default function CreatePostPreviewMarkdown({
 
           <button
             type="submit"
-            className="bg-muted-foreground max-w-[140px] rounded-lg p-1"
+            className="bg-muted-foreground max-w-[140px] rounded-lg p-1 flex justify-center min-w-[102px]"
           >
-            Submit your post
+            {isSubmitting ? (
+              <Loader2 className="animate-spin" />
+            ) : (
+              'Submit your post'
+            )}
           </button>
         </form>
       </div>

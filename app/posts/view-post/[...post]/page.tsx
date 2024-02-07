@@ -14,6 +14,9 @@ import {
 import { LikePostButton } from '@/components/post/likePostButton';
 import { revalidatePath } from 'next/cache';
 
+import { WriterInformations } from './WriterInformations';
+import StyledMarkdown from '@/components/markdown-preview/StyledMarkdown';
+
 type MetaDataPropsType = {
   params: { post: string };
   searchParams?: { [key: string]: string | string[] | undefined };
@@ -45,6 +48,7 @@ export default async function postsPage({
       content: true,
       image: true,
       likedBy: true,
+      authorId: true,
     },
   });
 
@@ -62,24 +66,6 @@ export default async function postsPage({
     revalidatePath(`/posts/view-post/${params.post[0]}`);
   };
 
-  // const getUserLikeBoolean = async () => {
-  //   return await fetch(
-  //     `/api/like/getUserLikeBoolean?postId=${encodeURIComponent(
-  //       params.post[0]
-  //     )}`,
-  //     {
-  //       method: 'GET',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //     }
-  //   )
-  //     .then((res) => res.json())
-  //     .then((res) => {
-  //       res;
-  //     });
-  // };
-
   return (
     <div className="flex flex-col gap-12">
       {getPostDatas.image && (
@@ -91,9 +77,10 @@ export default async function postsPage({
           height={1}
         />
       )}
-      <Markdown className={style.reactMarkDown}>{markdown}</Markdown>
+      <StyledMarkdown textPreview={markdown}></StyledMarkdown>
 
-      <div className="flex justify-end cursor-pointer">
+      <div className="flex justify-end align-baseline">
+        <span className="mr-4 text-lg">Did you liked this post?</span>
         <LikePostButton
           checkUser={checkUserConnected}
           postId={params.post[0]}
@@ -104,6 +91,11 @@ export default async function postsPage({
           }
           reValidatePath={handleRevalidatPath}
         />
+      </div>
+      <div>
+        {getPostDatas.authorId && (
+          <WriterInformations authorId={getPostDatas.authorId} />
+        )}
       </div>
     </div>
   );

@@ -3,8 +3,9 @@ import Link from 'next/link';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../../../pages/api/auth/[...nextauth]';
 import prisma from '@/lib/prisma';
-import FormUpdatePost from './FormUpdatePost';
+
 import { revalidatePath } from 'next/cache';
+import FormUpdatePost from './formUpdatePost';
 
 export default async function PageCreatPost({
   params,
@@ -54,6 +55,7 @@ export default async function PageCreatPost({
     'use server';
     revalidatePath('/admin');
   };
+
   return (
     <div className="flex flex-col gap-4">
       <div>
