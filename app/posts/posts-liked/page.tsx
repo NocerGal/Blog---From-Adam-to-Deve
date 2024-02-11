@@ -10,20 +10,17 @@ import {
 } from '@/components/ui/card';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { notFound } from 'next/navigation';
+import { postsQueryPostsLikedByUser } from './postLiked.query';
 
 export default async function PageLikedPosts() {
   const session = await getServerSession(authOptions);
 
-  const getAllPostsLikedByUser = await prisma.user.findMany({
-    where: {
-      id: session?.user.id,
-    },
-    select: {
-      Like: true,
-    },
-  });
+  if (!session) {
+    notFound();
+  }
 
-  const getAllPostsDatas = await prisma.post.findMany();
+  const postsLiked = (await postsQueryPostsLikedByUser())[0];
 
   return (
     <div>
@@ -34,35 +31,27 @@ export default async function PageLikedPosts() {
 
         <CardContent>
           <div className="flex flex-col gap-4">
-            {getAllPostsLikedByUser[0].Like.map((likedPost, index) => (
+            {postsLiked.likedPosts.map((likedPost, index) => (
               <div key={index}>
-                {getAllPostsDatas.map(
-                  (post, index) =>
-                    likedPost.postId === post.id && (
-                      <Card key={index}>
-                        <CardHeader className="pb-4">
-                          <CardTitle>{post.title}</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          <span className="font font-semibold">
-                            Post description :
-                          </span>{' '}
-                          {post.postDescription}
-                        </CardContent>
-                        <CardFooter>
-                          <div className="flex flex-col sm:flex-row justify-between sm:items-end w-full">
-                            <p>
-                              Liked on{' '}
-                              {likedPost.createdAt.toLocaleDateString()}
-                            </p>
-                            <Link href={`/posts/view-post/${post.id}`}>
-                              <Button>View post</Button>
-                            </Link>
-                          </div>
-                        </CardFooter>
-                      </Card>
-                    )
-                )}
+                <Card key={index}>
+                  <CardHeader className="pb-4">
+                    <CardTitle>{likedPost.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <span className="font font-semibold">
+                      Post description :
+                    </span>{' '}
+                    {likedPost.postDescription}
+                  </CardContent>
+                  <CardFooter>
+                    <div className="flex flex-col sm:flex-row justify-between sm:items-end w-full">
+                      <p>Liked on {likedPost.createdAt.toLocaleDateString()}</p>
+                      <Link href={`/posts/view-post/${likedPost.id}`}>
+                        <Button>View post</Button>
+                      </Link>
+                    </div>
+                  </CardFooter>
+                </Card>
               </div>
             ))}
           </div>

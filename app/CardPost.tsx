@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from '../src/components/ui/card';
-import { postType } from './postCard.query';
+import { postType } from './post.query';
 
 export type CardPostProps = {
   article: postType;

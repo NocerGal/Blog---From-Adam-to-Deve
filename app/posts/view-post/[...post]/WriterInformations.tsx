@@ -1,57 +1,52 @@
 /* eslint-disable @next/next/no-img-element */
 import { Card, CardContent } from '@/components/ui/card';
-import prisma from '@/lib/prisma';
 import { createHash } from 'crypto';
+import { postQueryAuthorDatas } from './post.query';
 
-type WriterInformationsProps = {
+type AuthorInformationsProps = {
   authorId: string;
 };
 
-export async function WriterInformations({
+export async function AuthorInformations({
   authorId,
-}: WriterInformationsProps) {
-  const getAuthorDatas = await prisma.user.findUnique({
-    where: {
-      id: authorId,
-    },
-    select: {
-      selfDescription: true,
-      name: true,
-      image: true,
-    },
-  });
+}: AuthorInformationsProps) {
+  const authorDatas = await postQueryAuthorDatas(authorId);
 
-  function hashName(name: string) {
-    return createHash('sha256').update(name).digest('hex');
+  if (!authorDatas) {
+    return <p>Unable to get author informations</p>;
   }
 
-  const hashedId =
-    authorId == null || authorId == undefined ? 'error' : hashName(authorId);
+  const hashName = (name: string) => {
+    if (authorId === null) {
+      return 'error';
+    }
+    return createHash('sha256').update(name).digest('hex');
+  };
 
   return (
     <Card>
       <CardContent className="pt-6">
-        {getAuthorDatas?.selfDescription ? (
+        {authorDatas.selfDescription ? (
           <div className="flex flex-col gap-4">
             <h2>Author informations</h2>
             <div className="flex gap-8">
               <img
                 src={
-                  getAuthorDatas?.image ??
-                  `https://api.dicebear.com/7.x/lorelei/svg?seed=${hashedId}`
+                  authorDatas.image ??
+                  `https://api.dicebear.com/7.x/lorelei/svg?seed=${hashName}`
                 }
                 alt="picture of the author"
                 title="picture of the author"
                 className="flex rounded-full h-36 w-36 object-fill"
               />
               <div className="flex flex-col gap-2 w-full">
-                <p className="text-2xl">{getAuthorDatas?.name}</p>
-                <p>{getAuthorDatas?.selfDescription}</p>
+                <p className="text-2xl">{authorDatas.name}</p>
+                <p>{authorDatas.selfDescription}</p>
               </div>
             </div>
           </div>
         ) : (
-          <span>Author : {getAuthorDatas?.name}</span>
+          <span>Author : {authorDatas.name}</span>
         )}
       </CardContent>
     </Card>

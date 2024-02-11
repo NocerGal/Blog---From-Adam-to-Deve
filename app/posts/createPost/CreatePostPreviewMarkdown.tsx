@@ -9,6 +9,8 @@ import StyledMarkdown from '../../../src/components/markdown-preview/StyledMarkd
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
+import { postActionCreate } from './post.action';
+import { postQueryPostId } from './post.query';
 
 type FormSchema = {
   title: string;
@@ -18,13 +20,7 @@ type FormSchema = {
   content: string;
 };
 
-type CreatePostPreviewMarkdownPropsTypes = {
-  revalidateAdminPath: () => void;
-};
-
-export default function CreatePostPreviewMarkdown({
-  revalidateAdminPath,
-}: CreatePostPreviewMarkdownPropsTypes) {
+export default function CreatePostPreviewMarkdown() {
   const router = useRouter();
 
   const [titlePreview] = useState('Tape your title');
@@ -48,38 +44,18 @@ export default function CreatePostPreviewMarkdown({
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isSubmitSuccessful },
   } = useForm<FormSchema>({
     resolver: zodResolver(ZodFormSchema),
   });
 
   const handleSubmitForm = async (data: FormSchema) => {
-    await fetch('/api/createPost', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
+    await postActionCreate(data);
+    const currentPostId = await postQueryPostId(data.title);
 
-    const getCurrentPostId = await fetch(
-      `/api/getPostByTitle?postTitle=${encodeURIComponent(data.title)}`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    )
-      .then((res) => res.json())
-      .then((res) => {
-        return res[0].id;
-      });
-    revalidateAdminPath();
-
-    router.push(`/admin/preview-unpblished-post/${getCurrentPostId}`);
+    router.push(`/admin/preview-unpblished-post/${currentPostId.id}`);
   };
-  console.log(isSubmitting);
+
   return (
     <div className="flex flex-col gap-4">
       <div>
@@ -91,109 +67,116 @@ export default function CreatePostPreviewMarkdown({
             target="_blank"
           >
             example
-          </Link>{' '}
+          </Link>
           to write your article
         </p>
 
         <form
-          className="flex flex-col gap-4 h-[6 0vh]"
+          className="flex flex-col gap-4 h-[60vh]"
           onSubmit={handleSubmit(handleSubmitForm)}
         >
-          <div className="flex flex-col">
-            <input
-              id="postTitle"
-              type="text"
-              placeholder={titlePreview}
-              className="bg-secondary py-3 px-3 rounded-lg"
-              {...register('title')}
-            />
-            {errors.title && (
-              <span className="flex text-destructive font-semibold mt-1">
-                {errors.title.message}
-              </span>
-            )}
-          </div>
-          <div className="flex flex-col">
-            <input
-              id="postImageUrl"
-              type="url"
-              placeholder="Insert image url. It's not mandatory"
-              className="bg-secondary py-3 px-3 rounded-lg"
-              {...register('imageUrl')}
-            />
-            {errors.imageUrl && (
-              <span className="flex text-destructive font-semibold mt-1">
-                {errors.imageUrl.message}
-              </span>
-            )}
-          </div>
-
-          <div className="flex flex-col">
-            <input
-              id="postDescription"
-              type="text"
-              placeholder={postDescriptionPreview}
-              className="bg-secondary py-3 px-3 rounded-lg"
-              {...register('postDescription')}
-            />
-            {errors.content && (
-              <span className="flex text-destructive font-semibold mt-1">
-                {errors.content.message}
-              </span>
-            )}
-          </div>
-
-          <div className="flex flex-col">
-            <select
-              id="postTag"
-              defaultValue={'Select a tag'}
-              className="bg-secondary py-3 px-3 rounded-lg"
-              {...register('tag')}
-            >
-              <option selected disabled value="Select a tag">
-                Select a tag
-              </option>
-              <option value={'12345'}>Redux</option>
-              {allAvailablesTags.map((tag) => (
-                <option key={tag.id} value={tag.id}>
-                  {tag.name}
-                </option>
-              ))}
-            </select>
-            {errors.tag && (
-              <span className="flex text-destructive font-semibold mt-1">
-                {errors.tag.message}
-              </span>
-            )}
-          </div>
-          <div className="flex flex-col h-full">
-            <textarea
-              id="postContent"
-              {...register('content')}
-              onChange={(e) => setTextPreview(e.target.value)}
-              className="resize-none h-full w-full bg-secondary py-2 px-3 rounded-lg"
-              placeholder={textPreview}
-              onSubmit={(e) => {
-                e.preventDefault();
-              }}
-            />
-            {errors.content && (
-              <span className="flex text-destructive font-semibold mt-1">
-                {errors.content.message}
-              </span>
-            )}
-          </div>
-
-          <button
-            type="submit"
-            className="bg-muted-foreground max-w-[140px] rounded-lg p-1 flex justify-center min-w-[102px]"
+          <fieldset
+            className="flex flex-col gap-4 h-full"
+            disabled={isSubmitting}
           >
-            {isSubmitting ? (
-              <Loader2 className="animate-spin" />
-            ) : (
-              'Submit your post'
-            )}
-          </button>
+            <div className="flex flex-col">
+              <input
+                id="postTitle"
+                type="text"
+                placeholder={titlePreview}
+                className="bg-secondary py-3 px-3 rounded-lg"
+                {...register('title')}
+              />
+              {errors.title && (
+                <span className="flex text-destructive font-semibold mt-1">
+                  {errors.title.message}
+                </span>
+              )}
+            </div>
+            <div className="flex flex-col">
+              <input
+                id="postImageUrl"
+                type="url"
+                placeholder="Insert image url. It's not mandatory"
+                className="bg-secondary py-3 px-3 rounded-lg"
+                {...register('imageUrl')}
+              />
+              {errors.imageUrl && (
+                <span className="flex text-destructive font-semibold mt-1">
+                  {errors.imageUrl.message}
+                </span>
+              )}
+            </div>
+
+            <div className="flex flex-col">
+              <input
+                id="postDescription"
+                type="text"
+                placeholder={postDescriptionPreview}
+                className="bg-secondary py-3 px-3 rounded-lg"
+                {...register('postDescription')}
+              />
+              {errors.content && (
+                <span className="flex text-destructive font-semibold mt-1">
+                  {errors.content.message}
+                </span>
+              )}
+            </div>
+
+            <div className="flex flex-col">
+              <select
+                id="postTag"
+                defaultValue={'Select a tag'}
+                className="bg-secondary py-3 px-3 rounded-lg"
+                {...register('tag')}
+              >
+                <option selected disabled value="Select a tag">
+                  Select a tag
+                </option>
+                <option value={'12345'}>Redux</option>
+                {allAvailablesTags.map((tag) => (
+                  <option key={tag.id} value={tag.id}>
+                    {tag.name}
+                  </option>
+                ))}
+              </select>
+              {errors.tag && (
+                <span className="flex text-destructive font-semibold mt-1">
+                  {errors.tag.message}
+                </span>
+              )}
+            </div>
+            <div className="flex flex-col h-full">
+              <textarea
+                id="postContent"
+                {...register('content')}
+                onChange={(e) => setTextPreview(e.target.value)}
+                className="resize-none h-full w-full bg-secondary py-2 px-3 rounded-lg"
+                placeholder={textPreview}
+                onSubmit={(e) => {
+                  e.preventDefault();
+                }}
+              />
+              {errors.content && (
+                <span className="flex text-destructive font-semibold mt-1">
+                  {errors.content.message}
+                </span>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              className="bg-muted-foreground max-w-[140px] rounded-lg p-1 flex justify-center min-w-[102px] hover:opacity-95"
+            >
+              {isSubmitting ? (
+                <Loader2 className="animate-spin" />
+              ) : isSubmitSuccessful ? (
+                'Success! You are redirected...'
+              ) : (
+                'Submit your post'
+              )}
+            </button>
+          </fieldset>
         </form>
       </div>
       <div className="w-full">

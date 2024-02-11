@@ -1,7 +1,7 @@
 'use client';
 
 import { Tag } from '@prisma/client';
-import { postType } from '../../../app/postCard.query';
+import { postType } from '../../../app/post.query';
 import { useState } from 'react';
 import { Button } from '../ui/button';
 import { CardPost } from '../../../app/CardPost';

@@ -1,28 +1,16 @@
 import { CardPost } from './CardPost';
 import React from 'react';
-import { getAllPosts } from './postCard.query';
 import Link from 'next/link';
-import prisma from '@/lib/prisma';
 import { SortAllPosts } from '@/components/post/SortAllPosts';
-import Head from 'next/head';
+import { postQueryAllPosts, postQueryAllTags } from './post.query';
 
 export default async function Page() {
-  const posts = await getAllPosts();
+  const posts = await postQueryAllPosts();
 
-  // return all tags that has been associated at least once to a post
-  const getAllTags = await prisma.tag.findMany({
-    where: {
-      posts: {
-        some: {},
-      },
-    },
-  });
+  const getAllTags = await postQueryAllTags();
 
   return (
     <div>
-      <Head>
-        <title>Test page Head</title>
-      </Head>
       <div className="flex flex-col mb-8 items-center w-full">
         <h1 className="text-4xl mb-2">Dev Tips Fr</h1>
         <h2>Des tips en français</h2>

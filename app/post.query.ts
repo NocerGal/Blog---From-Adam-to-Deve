@@ -1,7 +1,7 @@
 import prisma from '@/lib/prisma';
 import { Prisma } from '@prisma/client';
 
-export const getAllPosts = async () => {
+export const postQueryAllPosts = async () => {
   const allPosts = await prisma.post.findMany({
     select: {
       id: true,
@@ -21,7 +21,19 @@ export const getAllPosts = async () => {
 };
 
 export type getAllPostsType = NonNullable<
-  Prisma.PromiseReturnType<typeof getAllPosts>
+  Prisma.PromiseReturnType<typeof postQueryAllPosts>
 >;
 
 export type postType = getAllPostsType[0];
+
+export const postQueryAllTags = async () => {
+  const tags = await prisma.tag.findMany({
+    where: {
+      posts: {
+        some: {},
+      },
+    },
+  });
+
+  return tags;
+};

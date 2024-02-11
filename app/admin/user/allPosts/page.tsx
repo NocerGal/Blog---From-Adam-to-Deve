@@ -3,44 +3,22 @@ export type pageAdminProps = {};
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import React from 'react';
 import { authOptions } from '../../../../pages/api/auth/[...nextauth]';
-import prisma from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-
-import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import { ButtonClient } from '../../ButtonClient';
+import { adminActionDeletePost } from '../../admin.action';
+import { adminQueryUserPosts } from './admin.query';
 
 export default async function PageAllUserPosts() {
   const session = await getServerSession(authOptions);
 
-  if (session === null || session.user.id === undefined) {
-    return;
+  if (!session === null) {
+    return notFound();
   }
 
-  const posts = await prisma.user.findMany({
-    where: {
-      id: session.user.id,
-    },
-    select: {
-      id: true,
-      posts: true,
-    },
-  });
-
-  const handleDeletePost = async (postId: string) => {
-    'use server';
-
-    await prisma.post.delete({
-      where: {
-        id: postId,
-      },
-    });
-
-    revalidatePath('/admin');
-    redirect('/admin');
-  };
+  const posts = await adminQueryUserPosts();
 
   return (
     <div>
@@ -49,7 +27,7 @@ export default async function PageAllUserPosts() {
           <CardTitle className="text-3xl">All your posts</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-2">
-          {posts[0].posts.map((post, index) => (
+          {posts.posts.map((post, index) => (
             <div key={index}>
               <Card>
                 <CardHeader className="flex flex-row items-baseline justify-between">
@@ -87,7 +65,7 @@ export default async function PageAllUserPosts() {
 
                     <ButtonClient
                       postId={post.id}
-                      onClickFunction={handleDeletePost}
+                      onClickFunction={adminActionDeletePost}
                       variant="destructive"
                       buttonText="Delete post"
                     />

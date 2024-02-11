@@ -1,10 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import React from 'react';
 import { authOptions } from '../../pages/api/auth/[...nextauth]';
 import { getServerSession } from 'next-auth';
-import { z } from 'zod';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { getUserPosts } from '../findPost';
@@ -14,6 +11,7 @@ import Link from 'next/link';
 import prisma from '@/lib/prisma';
 import { ButtonClient } from './ButtonClient';
 import { UpdateAdminDatasForm } from './UpdateAdminDatasForm';
+import { adminActionDeletePost, adminActionPublishPost } from './admin.action';
 
 export default async function pageAdmin() {
   const session = await getServerSession(authOptions);
@@ -42,20 +40,6 @@ export default async function pageAdmin() {
 
   const userPosts = await getUserPosts(session.user.id);
 
-  const handlePublishPost = async (postId: string) => {
-    'use server';
-    await prisma.post.update({
-      where: {
-        id: postId,
-      },
-      data: {
-        published: true,
-      },
-    });
-    revalidatePath('/admin');
-    redirect('/admin');
-  };
-
   const handleDeletePost = async (postId: string) => {
     'use server';
 
@@ -68,10 +52,6 @@ export default async function pageAdmin() {
     redirect('/admin');
   };
 
-  const handlRevalidatePath = async () => {
-    'use server';
-    revalidatePath('/admin');
-  };
   return (
     <div className="flex flex-col gap-6">
       <div>
@@ -125,10 +105,7 @@ export default async function pageAdmin() {
               <h2>Your informations</h2>
             </CardHeader>
             <CardContent>
-              <UpdateAdminDatasForm
-                userDatas={getUserDatas}
-                revalidathPath={handlRevalidatePath}
-              />
+              <UpdateAdminDatasForm userDatas={getUserDatas} />
             </CardContent>
           </Card>
         </div>
@@ -157,13 +134,13 @@ export default async function pageAdmin() {
                       </Link>
 
                       <ButtonClient
-                        onClickFunction={handlePublishPost}
+                        onClickFunction={adminActionPublishPost}
                         buttonText="Publish post"
                         postId={unpublishedPost.id}
                         variant={'default'}
                       />
                       <ButtonClient
-                        onClickFunction={handleDeletePost}
+                        onClickFunction={adminActionDeletePost}
                         buttonText="Delete post"
                         postId={unpublishedPost.id}
                         variant={'destructive'}

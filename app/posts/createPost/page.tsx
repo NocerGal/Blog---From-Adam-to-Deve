@@ -2,7 +2,6 @@ import CreatePostPreviewMarkdown from './CreatePostPreviewMarkdown';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../../pages/api/auth/[...nextauth]';
 import { redirect } from 'next/navigation';
-import { revalidatePath } from 'next/cache';
 
 export default async function PageCreatPost() {
   const session = await getServerSession(authOptions);
@@ -11,14 +10,5 @@ export default async function PageCreatPost() {
     redirect('/posts/createPost/error-creation-post');
   }
 
-  const handleRevalidateAdminPath = async () => {
-    'use server';
-    revalidatePath('/admin');
-  };
-
-  return (
-    <CreatePostPreviewMarkdown
-      revalidateAdminPath={handleRevalidateAdminPath}
-    />
-  );
+  return <CreatePostPreviewMarkdown />;
 }

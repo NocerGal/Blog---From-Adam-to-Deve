@@ -3,75 +3,44 @@
 import { Session } from '@prisma/client';
 import { Heart } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
-import TriggerAuth from '../auth/TriggerAuth';
+import TriggerAuth from '../../../../src/components/auth/TriggerAuth';
+import {
+  postActionDecrementLike,
+  postActionIncrementLike,
+} from './post.action';
+import { postQueryIsUserLike } from './post.query';
 
 type LikePostButtonProps = {
   likeCounter: number;
   postId: string;
   checkUser: Omit<Session, 'sessionToken'> | null;
-  reValidatePath: () => void;
 };
 
 export function LikePostButton({
   checkUser,
   postId,
   likeCounter,
-  reValidatePath,
 }: LikePostButtonProps) {
-  const id = postId;
-
   const [likeCount, setLikeCount] = useState(likeCounter);
-  const [userLiked, setUserLiked] = useState<null | boolean>();
+  const [isUserLikes, setIsUserLikes] = useState<null | boolean>();
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [, setDisplayLoginButton] = useState(false);
 
-  const incrementLike = async () => {
-    await fetch('/api/like/incrementLike', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(postId),
-    });
-    reValidatePath();
-  };
-
-  const decrementLike = async () => {
-    await fetch('/api/like/decrementLike', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(postId),
-    });
-    reValidatePath();
-  };
-
   const handleLike = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
-    userLiked ? decrementLike() : incrementLike();
-    setLikeCount((prev) => (userLiked ? prev - 1 : prev + 1));
-    setUserLiked((prev) => !prev);
+    isUserLikes
+      ? postActionDecrementLike(postId)
+      : postActionIncrementLike(postId);
+    setLikeCount((prev) => (isUserLikes ? prev - 1 : prev + 1));
+    setIsUserLikes((prev) => !prev);
     setIsButtonDisabled(true);
     setTimeout(() => setIsButtonDisabled(false), 2000);
   };
 
   useEffect(() => {
-    const fetchUserLikeStatus = async () => {
-      const response = await fetch(
-        `/api/like/getUserLikeBoolean?postId=${encodeURIComponent(id)}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-      const res = await response.json();
-      setUserLiked(res);
+    async () => {
+      setIsUserLikes(await postQueryIsUserLike(postId));
     };
-
-    fetchUserLikeStatus();
   });
 
   return (
@@ -94,7 +63,7 @@ export function LikePostButton({
                 <span>{likeCount}</span>
                 <Heart
                   className={`${
-                    userLiked ? 'fill-transparent' : 'fill-white'
+                    isUserLikes ? 'fill-transparent' : 'fill-white'
                   } hover:fill-white transition-all cursor-pointer`}
                   size={18}
                 ></Heart>
@@ -113,7 +82,7 @@ export function LikePostButton({
           <span>{likeCount}</span>
           <Heart
             className={`${
-              userLiked ? 'fill-white' : 'fill-transparent'
+              isUserLikes ? 'fill-white' : 'fill-transparent'
             } hover:fill-white transition-all`}
             size={18}
           />
