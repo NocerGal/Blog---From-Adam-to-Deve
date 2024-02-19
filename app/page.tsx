@@ -1,14 +1,22 @@
-import { CardPost } from './CardPost';
-import React from 'react';
-import Link from 'next/link';
-import { SortAllPosts } from '@/components/post/SortAllPosts';
+import React, { Suspense } from 'react';
+import { SortAllPosts } from './SortAllPosts';
 import { postQueryAllPosts, postQueryAllTags } from './post.query';
+import { LastPostsPbulished } from './LastPostsPulished';
+import { LastPostsPublishedSkeleton } from './LastPostsPublishedSkeleton';
+import { SortAllPostsServerSide } from './SortAllPostsServerSide';
+import { SortAllPostsSkeleton } from './SortAllPostsSkeleton';
 
 export default async function Page() {
   const posts = await postQueryAllPosts();
 
   const getAllTags = await postQueryAllTags();
 
+  // await new Promise((resolve) => {
+  //   setTimeout(() => {
+  //     console.log(resolve);
+  //     resolve(undefined);
+  //   }, 10000);
+  // });
   return (
     <div>
       <div className="flex flex-col mb-8 items-center w-full">
@@ -32,23 +40,16 @@ export default async function Page() {
             Votre article une fois validé sera publié.
           </p>
         </div>
-        <div className="mb-4">
-          <h2 className="mb-4">Last posts</h2>
-          <div className="flex flex-col md:flex-row gap-2">
-            {posts.slice(0, 3).map((post, index) => (
-              <Link
-                href={`/posts/view-post/${post.id}`}
-                key={index}
-                className="w-full md:w-1/3"
-              >
-                <CardPost article={post} />
-              </Link>
-            ))}
-          </div>
-        </div>
+
+        <Suspense fallback={<LastPostsPublishedSkeleton />}>
+          <LastPostsPbulished posts={posts} />
+        </Suspense>
+
         <div>
           <h2 className="mb-4">All articles</h2>
-          <SortAllPosts allTags={getAllTags} posts={posts} />
+          <Suspense fallback={<SortAllPostsSkeleton />}>
+            <SortAllPostsServerSide />
+          </Suspense>
         </div>
       </div>
     </div>

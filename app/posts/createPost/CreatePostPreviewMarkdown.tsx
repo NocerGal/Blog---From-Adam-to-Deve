@@ -130,7 +130,7 @@ export default function CreatePostPreviewMarkdown() {
                 className="bg-secondary py-3 px-3 rounded-lg"
                 {...register('tag')}
               >
-                <option selected disabled value="Select a tag">
+                <option selected disabled value="">
                   Select a tag
                 </option>
                 <option value={'12345'}>Redux</option>

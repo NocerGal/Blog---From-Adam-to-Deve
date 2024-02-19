@@ -1,10 +1,11 @@
 'use client';
 
 import { Tag } from '@prisma/client';
-import { postType } from '../../../app/post.query';
+import { postType } from './post.query';
 import { useState } from 'react';
-import { Button } from '../ui/button';
-import { CardPost } from '../../../app/CardPost';
+import { Button } from '../src/components/ui/button';
+
+import { CardPost } from './CardPost';
 
 type SortAllPostsTypes = {
   allTags: Tag[];
@@ -23,7 +24,7 @@ export function SortAllPosts({ allTags, posts }: SortAllPostsTypes) {
   });
 
   return (
-    <>
+    <div>
       <div className="flex flex-wrap gap-4 mb-6">
         <Button
           onClick={(e) => setCategoryFiltered(e.currentTarget.innerText)}
@@ -48,6 +49,6 @@ export function SortAllPosts({ allTags, posts }: SortAllPostsTypes) {
           </a>
         ))}
       </div>
-    </>
+    </div>
   );
 }

@@ -1,0 +1,78 @@
+import { Card, CardHeader, CardTitle } from '@/components/ui/card';
+import Link from 'next/link';
+import { ButtonClient } from './ButtonClient';
+import { Button } from '@/components/ui/button';
+import prisma from '@/lib/prisma';
+import { adminActionDeletePost, adminActionPublishPost } from './admin.action';
+
+export type AllPostsToReviewProps = {
+  userDatas: {
+    selfDescription: string | null;
+    name: string;
+    role: string;
+    image: string | null;
+  } | null;
+};
+
+export const AllPostsToReview = async ({
+  userDatas,
+}: AllPostsToReviewProps) => {
+  await new Promise((resolve) => {
+    setTimeout(() => {
+      console.log(resolve);
+      resolve(undefined);
+    }, 4000);
+  });
+  const getAllUnpublishedPosts = await prisma.post.findMany({
+    where: {
+      published: false,
+    },
+  });
+  return (
+    <div className="flex flex-col gap-4">
+      {userDatas?.role == 'ADMIN' && (
+        <div>
+          <Card className="px-4 pb-6">
+            <CardHeader>
+              <h2>All post to review</h2>
+            </CardHeader>
+            <div className="flex flex-col gap-4">
+              {getAllUnpublishedPosts.map((unpublishedPost) => {
+                return (
+                  <Card
+                    className="flex justify-between"
+                    key={unpublishedPost.id}
+                  >
+                    <CardHeader>
+                      <CardTitle>{unpublishedPost.title}</CardTitle>
+                    </CardHeader>
+                    <div className="flex items-center gap-2 pr-6">
+                      <Link
+                        href={`/admin/preview-unpblished-post/${unpublishedPost.id}`}
+                      >
+                        <Button variant={'secondary'}>Preview</Button>
+                      </Link>
+
+                      <ButtonClient
+                        onClickFunction={adminActionPublishPost}
+                        buttonText="Publish post"
+                        postId={unpublishedPost.id}
+                        variant={'default'}
+                      />
+                      <ButtonClient
+                        onClickFunction={adminActionDeletePost}
+                        buttonText="Delete post"
+                        postId={unpublishedPost.id}
+                        variant={'destructive'}
+                      />
+                    </div>
+                  </Card>
+                );
+              })}
+            </div>
+          </Card>
+        </div>
+      )}
+    </div>
+  );
+};

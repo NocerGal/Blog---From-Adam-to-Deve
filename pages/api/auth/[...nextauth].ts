@@ -10,9 +10,7 @@ const githubSecret = process.env.GITHUB_SECRET;
 
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
-  theme: {
-    logo: '/images/logo-text.png',
-  },
+
   providers: [
     GitHubProvider({
       clientId: env.GITHUB_ID,
