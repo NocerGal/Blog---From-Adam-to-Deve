@@ -7,6 +7,7 @@ import { authOptions } from '../../../../pages/api/auth/[...nextauth]';
 import { adminQueryUserPosts } from './admin.query';
 import { Button } from '@/components/ui/button';
 import { adminActionDeletePost } from '../../admin.action';
+import { ButtoButtonDeletePostClient } from '../../ButtonDeletePost';
 
 export const AllUserPosts = async () => {
   const session = await getServerSession(authOptions);
@@ -22,7 +23,7 @@ export const AllUserPosts = async () => {
       <CardHeader>
         <CardTitle className="text-3xl">All your posts</CardTitle>
       </CardHeader>
-      <CardContent className="flex flex-col gap-4">
+      <CardContent className="flex sm:flex-col gap-4">
         {posts.posts.map((post, index) => (
           <div key={index}>
             <Card>
@@ -45,7 +46,7 @@ export const AllUserPosts = async () => {
                       : post.content
                     : 'post content not find.'}
                 </div>
-                <div className="flex justify-end gap-2">
+                <div className="flex flex-col items-end sm:flex-row justify-end sm:items-center gap-2">
                   <Button>
                     <Link href={`/posts/view-post/${post.id}`}>View post</Link>
                   </Button>
@@ -55,10 +56,8 @@ export const AllUserPosts = async () => {
                     </Link>
                   </Button>
 
-                  <ButtonClient
+                  <ButtoButtonDeletePostClient
                     postId={post.id}
-                    onClickFunction={adminActionDeletePost}
-                    variant="destructive"
                     buttonText="Delete post"
                   />
                 </div>

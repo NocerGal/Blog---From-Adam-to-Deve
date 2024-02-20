@@ -21,3 +21,9 @@ export const postQueryPostId = async (postTitle: string) => {
   });
   return post[0];
 };
+
+export const postQueryAllAvalablestags = async () => {
+  const allTags = await prisma.tag.findMany();
+
+  return allTags;
+};

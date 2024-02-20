@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import { postQueryAllPosts } from './post.query';
-import { LastPostsPbulished } from './LastPostsPulished';
+import { LastPostsPublished } from './LastPostsPulished';
 import { LastPostsPublishedSkeleton } from './LastPostsPublishedSkeleton';
 import { SortAllPostsServerSide } from './SortAllPostsServerSide';
 import { SortAllPostsSkeleton } from './SortAllPostsSkeleton';
@@ -31,7 +31,7 @@ export default async function Page() {
         </div>
 
         <Suspense fallback={<LastPostsPublishedSkeleton />}>
-          <LastPostsPbulished posts={posts} />
+          <LastPostsPublished posts={posts} />
         </Suspense>
 
         <div>

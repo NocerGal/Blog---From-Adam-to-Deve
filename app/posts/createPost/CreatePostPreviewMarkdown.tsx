@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Tag } from '@prisma/client';
 import { ZodType, z } from 'zod';
 import { useRouter } from 'next/navigation';
@@ -10,8 +10,9 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
 import { postActionCreate } from './post.action';
-import { postQueryPostId } from './post.query';
+
 import { toast } from 'sonner';
+import { postQueryAllAvalablestags } from './post.query';
 
 type FormSchema = {
   title: string;
@@ -27,7 +28,7 @@ export default function CreatePostPreviewMarkdown() {
   const [titlePreview] = useState('Tape your title');
   const [postDescriptionPreview] = useState('Tape your post description');
   const [textPreview, setTextPreview] = useState('Tape your text');
-  const [allAvailablesTags] = useState<Tag[]>([]);
+  const [allAvailablesTags, setAllAvailablesTags] = useState<Tag[]>([]);
 
   const ZodFormSchema: ZodType<FormSchema> = z.object({
     title: z.string().min(8).max(55),
@@ -42,6 +43,15 @@ export default function CreatePostPreviewMarkdown() {
     content: z.string().min(10),
   });
 
+  useEffect(() => {
+    const fetchAllAvailablestags = async () => {
+      const data = await postQueryAllAvalablestags();
+      setAllAvailablesTags(data);
+    };
+
+    fetchAllAvailablestags();
+  }, []);
+
   const {
     register,
     handleSubmit,
@@ -53,8 +63,9 @@ export default function CreatePostPreviewMarkdown() {
   const handleSubmitForm = async (formData: FormSchema) => {
     const { data, serverError } = await postActionCreate(formData);
 
-    if (!data) {
+    if (serverError) {
       toast.error('Your post has not been posted');
+      return;
     }
 
     toast.success('Your post has been posted!');
@@ -139,7 +150,7 @@ export default function CreatePostPreviewMarkdown() {
                 <option selected disabled value="">
                   Select a tag
                 </option>
-                <option value={'12345'}>Redux</option>
+
                 {allAvailablesTags.map((tag) => (
                   <option key={tag.id} value={tag.id}>
                     {tag.name}

@@ -2,7 +2,7 @@ import { getAllPostsType } from './post.query';
 import { CardPost } from './CardPost';
 import Link from 'next/link';
 
-export const LastPostsPbulished = async ({
+export const LastPostsPublished = async ({
   posts,
 }: {
   posts: getAllPostsType;

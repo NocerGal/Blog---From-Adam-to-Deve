@@ -9,6 +9,7 @@ import { UserInformations } from './UserInformations';
 import { UserInformationsSkeleton } from './UserInformationsSkeleton';
 import { AllPostsToReview } from './AllPostsToReview';
 import { AllPostsToReviewSkeleton } from './AllPostsToReviewSkeleton';
+import { CreateNewTags } from './CreateNewTags';
 
 export default async function pageAdmin() {
   const session = await getServerSession(authOptions);
@@ -48,6 +49,7 @@ export default async function pageAdmin() {
             <Suspense fallback={<AllPostsToReviewSkeleton />}>
               <AllPostsToReview userDatas={getUserDatas} />
             </Suspense>
+            <CreateNewTags />
           </div>
         )}
       </Suspense>

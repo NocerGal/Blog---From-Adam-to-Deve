@@ -18,10 +18,8 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { signOut } from 'next-auth/react';
-
 import Link from 'next/link';
 import { Heart, LogOut, Settings, User } from 'lucide-react';
-
 import { Session } from 'next-auth';
 import { createHash } from 'crypto';
 
@@ -90,9 +88,7 @@ export const LoggedInButton = (props: LoggedInButtonProps) => {
             <AlertDialogHeader>
               <AlertDialogTitle>Do you want to logout?</AlertDialogTitle>
               <AlertDialogFooter>
-                <AlertDialogCancel asChild>
-                  <Button variant="destructive">Cancel</Button>
-                </AlertDialogCancel>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
 
                 <Button
                   onClick={() => signOut({ callbackUrl: '/' })}
