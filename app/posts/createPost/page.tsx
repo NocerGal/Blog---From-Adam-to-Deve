@@ -11,9 +11,5 @@ export default async function PageCreatPost() {
     redirect('/posts/createPost/error-creation-post');
   }
 
-  // const allTags = await postQueryAllAvalablestags();
-
-  // console.log(allTags);
-
   return <CreatePostPreviewMarkdown />;
 }
