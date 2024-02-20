@@ -40,7 +40,7 @@ export function ButtoButtonDeletePostClient({
   return (
     <AlertDialog>
       <AlertDialogTrigger className="inline-flex bg-destructive rounded-lg px-4 py-2 hover:bg-destructive/90">
-        Delete post
+        Delete
       </AlertDialogTrigger>
       <AlertDialogContent className="flex flex-col items-center">
         <AlertDialogHeader>

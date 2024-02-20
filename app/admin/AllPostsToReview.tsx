@@ -1,9 +1,7 @@
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
-import { ButtonClient } from './ButtonClient';
 import { Button } from '@/components/ui/button';
 import prisma from '@/lib/prisma';
-import { adminActionDeletePost, adminActionPublishPost } from './admin.action';
 import { ButtoButtonDeletePostClient } from './ButtonDeletePost';
 import { ButtonPublishPost } from './ButtonPublishPost';
 
@@ -55,7 +53,7 @@ export const AllPostsToReview = async ({
                       />
                       <ButtoButtonDeletePostClient
                         postId={unpublishedPost.id}
-                        buttonText="Delete post"
+                        buttonText="Delete  "
                       />
                     </div>
                   </Card>
