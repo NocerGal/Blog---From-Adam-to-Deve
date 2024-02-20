@@ -1,5 +1,4 @@
 import { Button } from '@/components/ui/button';
-import { CardPost } from './CardPost';
 import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 

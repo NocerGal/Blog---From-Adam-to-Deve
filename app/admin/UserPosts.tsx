@@ -2,7 +2,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import Link from 'next/link';
-import { getUserPosts, userPostType } from '../findPost';
+import { getUserPosts } from '../findPost';
 import { Session } from 'next-auth';
 import { notFound } from 'next/navigation';
 
@@ -16,12 +16,6 @@ export const UserPosts = async ({ session }: UserPostsPropsTypes) => {
   }
   const userPosts = await getUserPosts(session.user.id);
 
-  await new Promise((resolve) => {
-    setTimeout(() => {
-      console.log(resolve);
-      resolve(undefined);
-    }, 4000);
-  });
   return (
     <Card className="flex-1">
       <CardHeader>

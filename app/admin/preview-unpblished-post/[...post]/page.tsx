@@ -1,9 +1,8 @@
 import Image from 'next/image';
-import prisma from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../../../pages/api/auth/[...nextauth]';
 import StyledMarkdown from '@/components/markdown-preview/StyledMarkdown';
-import { notFound, redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import { adminQueryUnpublishedPost } from './admin.query';
 
 export default async function postsPage({

@@ -4,6 +4,8 @@ import { ButtonClient } from './ButtonClient';
 import { Button } from '@/components/ui/button';
 import prisma from '@/lib/prisma';
 import { adminActionDeletePost, adminActionPublishPost } from './admin.action';
+import { ButtoButtonDeletePostClient } from './ButtonDeletePost';
+import { ButtonPublishPost } from './ButtonPublishPost';
 
 export type AllPostsToReviewProps = {
   userDatas: {
@@ -17,12 +19,6 @@ export type AllPostsToReviewProps = {
 export const AllPostsToReview = async ({
   userDatas,
 }: AllPostsToReviewProps) => {
-  await new Promise((resolve) => {
-    setTimeout(() => {
-      console.log(resolve);
-      resolve(undefined);
-    }, 4000);
-  });
   const getAllUnpublishedPosts = await prisma.post.findMany({
     where: {
       published: false,
@@ -34,7 +30,7 @@ export const AllPostsToReview = async ({
         <div>
           <Card className="px-4 pb-6">
             <CardHeader>
-              <h2>All post to review</h2>
+              <h2>All posts to review</h2>
             </CardHeader>
             <div className="flex flex-col gap-4">
               {getAllUnpublishedPosts.map((unpublishedPost) => {
@@ -53,17 +49,13 @@ export const AllPostsToReview = async ({
                         <Button variant={'secondary'}>Preview</Button>
                       </Link>
 
-                      <ButtonClient
-                        onClickFunction={adminActionPublishPost}
+                      <ButtonPublishPost
+                        postId={unpublishedPost.id}
                         buttonText="Publish post"
-                        postId={unpublishedPost.id}
-                        variant={'default'}
                       />
-                      <ButtonClient
-                        onClickFunction={adminActionDeletePost}
-                        buttonText="Delete post"
+                      <ButtoButtonDeletePostClient
                         postId={unpublishedPost.id}
-                        variant={'destructive'}
+                        buttonText="Delete post"
                       />
                     </div>
                   </Card>

@@ -7,13 +7,6 @@ export const LastPostsPbulished = async ({
 }: {
   posts: getAllPostsType;
 }) => {
-  // await new Promise((resolve) => {
-  //   setTimeout(() => {
-  //     console.log(resolve);
-  //     resolve(undefined);
-  //   }, 10000);
-  // });
-
   return (
     <div className="mb-4">
       <h2 className="mb-4">Last posts</h2>

@@ -1,13 +1,8 @@
-import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import React, { Suspense } from 'react';
 import { authOptions } from '../../pages/api/auth/[...nextauth]';
 import { getServerSession } from 'next-auth';
 import { notFound } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
 import prisma from '@/lib/prisma';
-import { ButtonClient } from './ButtonClient';
-
 import { UserPosts } from './UserPosts';
 import { UserPostsSkeleton } from './UserPostsSkeleton';
 import { UserInformations } from './UserInformations';

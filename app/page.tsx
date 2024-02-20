@@ -1,6 +1,5 @@
 import React, { Suspense } from 'react';
-import { SortAllPosts } from './SortAllPosts';
-import { postQueryAllPosts, postQueryAllTags } from './post.query';
+import { postQueryAllPosts } from './post.query';
 import { LastPostsPbulished } from './LastPostsPulished';
 import { LastPostsPublishedSkeleton } from './LastPostsPublishedSkeleton';
 import { SortAllPostsServerSide } from './SortAllPostsServerSide';
@@ -8,22 +7,12 @@ import { SortAllPostsSkeleton } from './SortAllPostsSkeleton';
 
 export default async function Page() {
   const posts = await postQueryAllPosts();
-
-  const getAllTags = await postQueryAllTags();
-
-  // await new Promise((resolve) => {
-  //   setTimeout(() => {
-  //     console.log(resolve);
-  //     resolve(undefined);
-  //   }, 10000);
-  // });
   return (
     <div>
       <div className="flex flex-col mb-8 items-center w-full">
         <h1 className="text-4xl mb-2">Dev Tips Fr</h1>
         <h2>Des tips en français</h2>
         <h2>et une fois par semaine!</h2>
-        Hea
       </div>
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-2 mb-4">

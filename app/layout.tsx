@@ -1,7 +1,6 @@
 // import { TailwindIndicator } from '@/components/TailwindIndicator';
 
 import { cn } from '@/lib/utils';
-
 import { Inter } from 'next/font/google';
 import { PropsWithChildren } from 'react';
 import { Providers } from './Providers';

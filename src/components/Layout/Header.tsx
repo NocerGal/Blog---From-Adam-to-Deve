@@ -11,7 +11,7 @@ export default async function Header() {
   const session = await getServerSession(authOptions);
 
   return (
-    <header className="py-4 px-8">
+    <header className="py-6 px-8">
       <div className="flex justify-between items-center w-xl mx-auto max-w-4xl ">
         <div className="flex items-baseline">
           <Link href="/">

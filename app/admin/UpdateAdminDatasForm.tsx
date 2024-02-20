@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { AdminFormSchema, zodAdminFormSchema } from './admin.schema';
 import { adminActionEditUserDatas } from './admin.action';
+import { toast } from 'sonner';
 
 type UpdateAdminDatasFormPropsTypes = {
   userDatas: UserDatas;
@@ -49,7 +50,12 @@ export const UpdateAdminDatasForm = ({
   if (userDatas === null) return <p>Error to get userDatas</p>;
   return (
     <form
-      onSubmit={handleSubmit((formDatas) => {
+      onSubmit={handleSubmit(async (formDatas) => {
+        const { data } = await adminActionEditUserDatas(formDatas);
+        if (!data) {
+          toast.error("You didn't success to update your profile");
+        }
+        toast.success('You succeed to update your profile');
         adminActionEditUserDatas(formDatas);
         router.refresh();
       })}

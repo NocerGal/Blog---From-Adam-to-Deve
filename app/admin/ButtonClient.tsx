@@ -1,11 +1,12 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
 
 type ButtonClientType = {
   postId: string;
   buttonText: string;
-  onClickFunction: (postId: string) => void;
+  onClickFunction: (postId: any) => any;
   variant?:
     | 'default'
     | 'destructive'
@@ -22,8 +23,18 @@ export function ButtonClient({
   buttonText,
   variant,
 }: ButtonClientType) {
+  const handleButtonClick = async (postId: string) => {
+    const { data, serverError } = await onClickFunction({ postid: postId });
+
+    console.log(serverError);
+    if (!data) {
+      toast.error('Error to delete this post', serverError);
+    }
+    toast.success('You successfully deleted this post');
+  };
+
   return (
-    <Button onClick={() => onClickFunction(postId)} variant={variant}>
+    <Button onClick={() => handleButtonClick(postId)} variant={variant}>
       {buttonText}
     </Button>
   );

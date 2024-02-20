@@ -4,11 +4,13 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '../../../../pages/api/auth/[...nextauth]';
 import { Session } from '@prisma/client';
 import { Metadata } from 'next';
-
 import { LikePostButton } from './likePostButton';
-
 import StyledMarkdown from '@/components/markdown-preview/StyledMarkdown';
-import { postQueryPostDatas, postQueryPostDatasTypes } from './post.query';
+import {
+  postQueryIsUserLike,
+  postQueryPostDatas,
+  postQueryPostDatasTypes,
+} from './post.query';
 import { notFound } from 'next/navigation';
 import { AuthorInformations } from './WriterInformations';
 
@@ -44,6 +46,8 @@ export default async function postsPage({
   const checkUserConnected: Omit<Session, 'sessionToken'> | null =
     await getServerSession(authOptions);
 
+  const isPostLikesByUser = await postQueryIsUserLike(params.post[0]);
+
   return (
     <div className="flex flex-col gap-12">
       {post.image && (
@@ -63,6 +67,7 @@ export default async function postsPage({
           checkUser={checkUserConnected}
           postId={params.post[0]}
           likeCounter={post.likedBy.length}
+          isPostLikesByUser={isPostLikesByUser}
         />
       </div>
       <div>

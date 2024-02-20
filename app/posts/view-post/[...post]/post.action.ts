@@ -1,41 +1,61 @@
 'use server';
 
-import { getServerSession } from 'next-auth';
-import { authOptions } from '../../../../pages/api/auth/[...nextauth]';
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
+import { authentificatedAction } from '@/lib/action';
+import { z } from 'zod';
 
-export const postActionIncrementLike = async (postId: string) => {
-  const session = await getServerSession(authOptions);
+const postActionIncrementLikeProps = z.object({
+  postId: z.string(),
+});
 
-  const userId = session?.user.id;
+const postActionDecrementLikeProps = z.object({
+  postId: z.string(),
+});
 
-  const post = await prisma.post.update({
-    where: {
-      id: postId,
-    },
-    data: {
-      likedBy: {
-        connect: [{ id: userId }],
+export const postActionIncrementLike = authentificatedAction(
+  postActionIncrementLikeProps,
+  async (props, { userId }) => {
+    const postId = props.postId;
+    const post = await prisma.post.update({
+      where: {
+        id: postId,
       },
-    },
-  });
-
-  revalidatePath(`/posts/view-post/${postId}`);
-};
-
-export const postActionDecrementLike = async (postId: string) => {
-  const session = await getServerSession(authOptions);
-
-  const post = await prisma.post.update({
-    where: {
-      id: postId,
-    },
-    data: {
-      likedBy: {
-        disconnect: [{ id: session?.user.id }],
+      data: {
+        likedBy: {
+          connect: [{ id: userId }],
+        },
       },
-    },
-  });
-  revalidatePath(`/posts/view-post/${postId}`);
-};
+    });
+
+    revalidatePath(`/posts/view-post/${postId}`);
+
+    return {
+      message: 'You like this post!',
+      post,
+    };
+  }
+);
+
+export const postActionDecrementLike = authentificatedAction(
+  postActionDecrementLikeProps,
+  async (props, { userId }) => {
+    const postId = props.postId;
+    const post = await prisma.post.update({
+      where: {
+        id: postId,
+      },
+      data: {
+        likedBy: {
+          disconnect: [{ id: userId }],
+        },
+      },
+    });
+    revalidatePath(`/posts/view-post/${postId}`);
+
+    return {
+      message: 'You have unlike this post!',
+      post,
+    };
+  }
+);

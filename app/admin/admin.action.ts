@@ -1,43 +1,82 @@
 'use server';
 
-import { getServerSession } from 'next-auth';
-import { authOptions } from '../../pages/api/auth/[...nextauth]';
 import prisma from '@/lib/prisma';
-import { AdminFormSchema } from './admin.schema';
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
+import { authentificatedAction } from '@/lib/action';
+import { z } from 'zod';
 
-export const adminActionEditUserDatas = async (datas: AdminFormSchema) => {
-  const session = await getServerSession(authOptions);
-  const userId = session?.user.id;
+const adminActionEditUserDatasType = z.object({
+  selfDescription: z.string().optional(),
+  name: z.string(),
+  image: z.string().optional(),
+});
 
-  await prisma.user.update({
-    where: {
-      id: userId,
-    },
-    data: datas,
-  });
-};
+const adminActionPublishPostType = z.object({
+  postId: z.string(),
+});
 
-export const adminActionPublishPost = async (postId: string) => {
-  await prisma.post.update({
-    where: {
-      id: postId,
-    },
-    data: {
-      published: true,
-    },
-  });
-  revalidatePath('/admin');
-  redirect('/admin');
-};
+const adminActionDeletePostType = z.object({
+  postId: z.string(),
+});
 
-export const adminActionDeletePost = async (postId: string) => {
-  await prisma.post.delete({
-    where: {
-      id: postId,
-    },
-  });
-  revalidatePath('/admin');
-  redirect('/admin');
-};
+export const adminActionEditUserDatas = authentificatedAction(
+  adminActionEditUserDatasType,
+  async (props, { userId }) => {
+    const updateUserDatas = await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: props,
+    });
+    revalidatePath('/admin');
+    return {
+      message: 'You successfully updated your informations',
+      updateUserDatas,
+    };
+  }
+);
+
+export const adminActionPublishPost = authentificatedAction(
+  adminActionPublishPostType,
+  async (props, { isUserAdmin }) => {
+    const postId = props.postId;
+
+    if (!isUserAdmin) {
+      throw new Error('You are unauthorized to publish post');
+    }
+
+    const publishPost = await prisma.post.update({
+      where: {
+        id: postId,
+      },
+      data: {
+        published: true,
+      },
+    });
+
+    revalidatePath('/admin');
+
+    return { message: 'You successfully publish this post!' };
+  }
+);
+
+export const adminActionDeletePost = authentificatedAction(
+  adminActionDeletePostType,
+  async (props, { isUserAdmin }) => {
+    const postId = props.postId;
+
+    if (!isUserAdmin) {
+      throw new Error('You are unauthorized to delete post');
+    }
+
+    const deletePost = await prisma.post.delete({
+      where: {
+        id: postId,
+      },
+    });
+
+    revalidatePath('/admin');
+
+    return { message: 'You successfully deleted this post', deletePost };
+  }
+);

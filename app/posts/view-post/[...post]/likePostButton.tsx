@@ -8,40 +8,57 @@ import {
   postActionDecrementLike,
   postActionIncrementLike,
 } from './post.action';
-import { postQueryIsUserLike } from './post.query';
+import { toast } from 'sonner';
 
 type LikePostButtonProps = {
   likeCounter: number;
   postId: string;
   checkUser: Omit<Session, 'sessionToken'> | null;
+  isPostLikesByUser: boolean | undefined;
 };
 
 export function LikePostButton({
   checkUser,
   postId,
   likeCounter,
+  isPostLikesByUser,
 }: LikePostButtonProps) {
   const [likeCount, setLikeCount] = useState(likeCounter);
-  const [isUserLikes, setIsUserLikes] = useState<null | boolean>();
+  const [isPostLikesByUserLocal, setPostLikesByUserLocal] = useState<
+    undefined | boolean
+  >();
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [, setDisplayLoginButton] = useState(false);
 
-  const handleLike = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleLike = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     e.preventDefault();
-    isUserLikes
-      ? postActionDecrementLike(postId)
-      : postActionIncrementLike(postId);
-    setLikeCount((prev) => (isUserLikes ? prev - 1 : prev + 1));
-    setIsUserLikes((prev) => !prev);
+
+    const { data, serverError } = isPostLikesByUserLocal
+      ? await postActionDecrementLike({ postId: postId })
+      : await postActionIncrementLike({ postId: postId });
+
+    if (data) {
+      toast.success(data.message);
+    } else {
+      toast.error('Error occured', {
+        description: serverError,
+      });
+    }
+
+    setLikeCount((prev) => (isPostLikesByUserLocal ? prev - 1 : prev + 1));
+    setPostLikesByUserLocal((prev) => !prev);
     setIsButtonDisabled(true);
     setTimeout(() => setIsButtonDisabled(false), 2000);
+
+    console.log();
   };
 
   useEffect(() => {
-    async () => {
-      setIsUserLikes(await postQueryIsUserLike(postId));
-    };
-  });
+    setPostLikesByUserLocal(isPostLikesByUser);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="flex flex-col">
@@ -51,9 +68,9 @@ export function LikePostButton({
           alertTitle="Connect with Github to like a post"
           trigger={
             <button
-              onClick={(e) =>
+              onClick={async (e) =>
                 checkUser
-                  ? handleLike(e)
+                  ? await handleLike(e)
                   : setDisplayLoginButton((prev) => !prev)
               }
               className="flex flex-row-reverse items-center gap-1 "
@@ -63,7 +80,7 @@ export function LikePostButton({
                 <span>{likeCount}</span>
                 <Heart
                   className={`${
-                    isUserLikes ? 'fill-transparent' : 'fill-white'
+                    isPostLikesByUserLocal ? 'fill-white' : 'fill-transparent'
                   } hover:fill-white transition-all cursor-pointer`}
                   size={18}
                 ></Heart>
@@ -82,7 +99,7 @@ export function LikePostButton({
           <span>{likeCount}</span>
           <Heart
             className={`${
-              isUserLikes ? 'fill-white' : 'fill-transparent'
+              isPostLikesByUser ? 'fill-white' : 'fill-transparent'
             } hover:fill-white transition-all`}
             size={18}
           />

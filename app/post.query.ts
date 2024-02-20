@@ -13,7 +13,7 @@ export const postQueryAllPosts = async () => {
     },
   });
 
-  const getAllPostsSortByDate = (await allPosts).sort((a, b) => {
+  const getAllPostsSortByDate = allPosts.sort((a, b) => {
     return b.updatedAt.getTime() - a.updatedAt.getTime();
   });
 

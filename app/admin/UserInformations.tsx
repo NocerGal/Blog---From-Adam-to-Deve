@@ -1,6 +1,5 @@
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { UpdateAdminDatasForm } from './UpdateAdminDatasForm';
-import prisma from '@/lib/prisma';
 import { Session } from 'next-auth';
 import { notFound } from 'next/navigation';
 
@@ -21,12 +20,12 @@ export const UserInformations = async ({
   if (!session) {
     notFound();
   }
-  await new Promise((resolve) => {
-    setTimeout(() => {
-      console.log(resolve);
-      resolve(undefined);
-    }, 4000);
-  });
+  // await new Promise((resolve) => {
+  //   setTimeout(() => {
+  //     console.log(resolve);
+  //     resolve(undefined);
+  //   }, 4000);
+  // });
   return (
     <Card className="flex-[2]">
       <CardHeader>

@@ -11,6 +11,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
 import { postActionCreate } from './post.action';
 import { postQueryPostId } from './post.query';
+import { toast } from 'sonner';
 
 type FormSchema = {
   title: string;
@@ -49,11 +50,16 @@ export default function CreatePostPreviewMarkdown() {
     resolver: zodResolver(ZodFormSchema),
   });
 
-  const handleSubmitForm = async (data: FormSchema) => {
-    await postActionCreate(data);
-    const currentPostId = await postQueryPostId(data.title);
+  const handleSubmitForm = async (formData: FormSchema) => {
+    const { data, serverError } = await postActionCreate(formData);
 
-    router.push(`/admin/preview-unpblished-post/${currentPostId.id}`);
+    if (!data) {
+      toast.error('Your post has not been posted');
+    }
+
+    toast.success('Your post has been posted!');
+
+    router.push(`/admin/preview-unpblished-post/${data?.newPost.id}`);
   };
 
   return (
