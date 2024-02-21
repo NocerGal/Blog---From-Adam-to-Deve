@@ -15,6 +15,7 @@ import { AuthorInformations } from './WriterInformations';
 
 type MetaDataPropsType = {
   params: { post: string };
+
   searchParams?: { [key: string]: string | string[] | undefined };
 };
 
@@ -25,9 +26,13 @@ export async function generateMetadata({
 
   const postDatas: postQueryPostDatasTypes = await postQueryPostDatas(postId);
 
+  const image = postDatas?.image ? postDatas.image : '../../../icon.png';
   return {
     title: postDatas?.title,
     description: postDatas?.postDescription,
+    openGraph: {
+      images: [image],
+    },
   };
 }
 
