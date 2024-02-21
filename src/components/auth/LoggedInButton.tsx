@@ -19,15 +19,22 @@ import {
 } from '@/components/ui/alert-dialog';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
-import { Heart, LogOut, Settings, User } from 'lucide-react';
+import { Heart, Loader2, LogOut, Settings, User } from 'lucide-react';
 import { Session } from 'next-auth';
 import { createHash } from 'crypto';
+import { useMutation } from '@tanstack/react-query';
 
 export type LoggedInButtonProps = {
   user: Session['user'];
 };
 
 export const LoggedInButton = (props: LoggedInButtonProps) => {
+  const mutation = useMutation({
+    mutationFn: async () => {
+      signOut({ callbackUrl: '/' });
+    },
+  });
+
   function hashName(name: string) {
     return createHash('sha256').update(name).digest('hex');
   }
@@ -90,10 +97,12 @@ export const LoggedInButton = (props: LoggedInButtonProps) => {
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
 
-                <Button
-                  onClick={() => signOut({ callbackUrl: '/' })}
-                  variant="destructive"
-                >
+                <Button onClick={() => mutation.mutate()} variant="destructive">
+                  {mutation.isPending ? (
+                    <Loader2 className="mr-2 animate-spin" size={16} />
+                  ) : (
+                    <LogOut className="mr-2" size={16} />
+                  )}
                   Logout
                 </Button>
               </AlertDialogFooter>

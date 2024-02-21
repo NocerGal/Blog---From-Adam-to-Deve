@@ -15,7 +15,7 @@ import { SignInOptions, signIn, signOut } from 'next-auth/react';
 import { GitHubLogoIcon } from '@radix-ui/react-icons';
 import { AlertDialogCancel } from '@radix-ui/react-alert-dialog';
 import { useMutation } from '@tanstack/react-query';
-import { Loader2 } from 'lucide-react';
+import { Loader2, LogIn } from 'lucide-react';
 
 type TriggerAuthType = {
   trigger: React.ReactElement;
@@ -44,13 +44,13 @@ export default function TriggerAuth(props: TriggerAuthType) {
         </AlertDialogHeader>
         <AlertDialogFooter className=" gap-2 m-auto">
           <Button onClick={async () => mutation.mutate()}>
-            <AlertDialogTitle>
+            <AlertDialogTitle className="flex">
               {mutation.isPending ? (
-                <Loader2 className="mr-2" size={16} />
+                <Loader2 className="mr-2 my-auto animate-spin" size={16} />
               ) : (
-                <Loader2 className="mr-2" size={16} />
+                <LogIn className="my-auto mr-2" size={16} />
               )}
-              Connect with Github
+              Login with Github
             </AlertDialogTitle>
           </Button>
           <AlertDialogCancel>

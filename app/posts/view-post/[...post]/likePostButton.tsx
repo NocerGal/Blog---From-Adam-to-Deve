@@ -83,7 +83,7 @@ export function LikePostButton({
                     isPostLikesByUserLocal ? 'fill-white' : 'fill-transparent'
                   } hover:fill-white transition-all cursor-pointer`}
                   size={18}
-                ></Heart>
+                />
               </div>
             </button>
           }
