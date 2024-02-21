@@ -10,7 +10,7 @@ export default async function Page() {
   return (
     <div>
       <div className="flex flex-col mb-8 items-center w-full">
-        <h1 className="text-4xl mb-2">FAD</h1>
+        <h1 className="text-4xl mb-2">From Adam to Deve</h1>
         <h2>Des tips en français</h2>
         <h2>et une fois par semaine!</h2>
       </div>
