@@ -5,6 +5,12 @@ import { postsQueryPostsLikedByUser } from './postLiked.query';
 import { Suspense } from 'react';
 import { LikedPostsSkeleton } from './LikedPostsSkeleton';
 import { LikedPosts } from './LikedPosts';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Posts aimés',
+  description: 'Vous pouvez retrouver les posts que avous avez aimé',
+};
 
 export default async function PageLikedPosts() {
   const session = await getServerSession(authOptions);

@@ -2,6 +2,12 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { FormUpdatePost } from './formUpdatePost';
 import { postQueryDatas } from './post.query';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Modifier votre post',
+  description: 'Vous pouvez modifier un article sur cette page',
+};
 
 export default async function PageCreatPost({
   params,

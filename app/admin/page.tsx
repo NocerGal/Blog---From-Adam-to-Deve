@@ -10,6 +10,12 @@ import { UserInformationsSkeleton } from './UserInformationsSkeleton';
 import { AllPostsToReview } from './AllPostsToReview';
 import { AllPostsToReviewSkeleton } from './AllPostsToReviewSkeleton';
 import { CreateNewTags } from './CreateNewTags';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Settings page',
+  description: 'Admin page pour vous permettre de modifier vos informations',
+};
 
 export default async function pageAdmin() {
   const session = await getServerSession(authOptions);

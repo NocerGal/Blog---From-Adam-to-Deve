@@ -13,8 +13,9 @@ import { Metadata } from 'next';
 const fontSans = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
 export const metadata: Metadata = {
-  title: 'titre',
-  description: 'description?',
+  title: 'Dev Tips Fr - Une article par semaine!',
+  description:
+    'Vous trouerez sur ce site internet un ensemble de tutos vous présentant des outils et des manières de faire, pour vous permettre de surmonter les difficultés que vous rencontrez durant le développement de vous sites!',
 };
 
 export default function RootLayout({ children }: PropsWithChildren) {

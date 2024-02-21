@@ -1,6 +1,7 @@
 .reactMarkDown * {
   box-sizing: border-box;
   font-size: 20px;
+  @apply tracking-wide;
 }
 
 .reactMarkDown img {
@@ -10,26 +11,30 @@
 }
 .reactMarkDown h1 {
   font-size: 36px;
-  @apply mb-6 mt-6;
+
+  @apply mb-12 mt-8 font-bold;
 }
 .reactMarkDown h2 {
   font-size: 32px;
-  @apply mb-6 mt-6;
+
+  @apply mb-12 mt-12 font-bold;
 }
 
 .reactMarkDown h3 {
   font-size: 28px;
-  @apply mb-6 mt-6;
+
+  @apply mb-12 mt-12 font-bold;
 }
 
 .reactMarkDown h4 {
   font-size: 24px;
-  @apply mb-6;
+
+  @apply mb-12 mt-12 font-bold;
 }
 
 .reactMarkDown p {
-  font-size: 20px;
-  line-height: 32px;
+  font-size: 22px;
+  line-height: 52px;
   @apply mb-4;
 }
 

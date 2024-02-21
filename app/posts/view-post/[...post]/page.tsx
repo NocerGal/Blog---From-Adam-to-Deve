@@ -1,5 +1,4 @@
 import React from 'react';
-import Image from 'next/image';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../../../pages/api/auth/[...nextauth]';
 import { Session } from '@prisma/client';
@@ -51,9 +50,9 @@ export default async function postsPage({
   return (
     <div className="flex flex-col gap-12">
       {post.image && (
-        <Image
+        <img
           className="h-[48vh] object-cover object-center"
-          src={post.image as string}
+          src={post.image}
           alt="image représentant le post"
           width={1000}
           height={1}

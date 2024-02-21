@@ -5,6 +5,12 @@ import { notFound } from 'next/navigation';
 import { adminQueryUserPosts } from './admin.query';
 import { AllUserPosts } from './AllUserPosts';
 import { AllUserPostsSkeleton } from './AllUserPostsSkeleton';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Vos articles',
+  description: "Voici l'ensemble des articles que vous avez rédigé",
+};
 
 export default async function PageAllUserPosts() {
   const session = await getServerSession(authOptions);

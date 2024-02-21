@@ -31,9 +31,9 @@ export default function CreatePostPreviewMarkdown() {
   const [allAvailablesTags, setAllAvailablesTags] = useState<Tag[]>([]);
 
   const ZodFormSchema: ZodType<FormSchema> = z.object({
-    title: z.string().min(8).max(55),
+    title: z.string().min(8).max(100),
     imageUrl: z.string().url().optional().or(z.literal('')),
-    postDescription: z.string().min(20).max(150),
+    postDescription: z.string().min(20).max(500),
     tag: z
       .string()
       .min(1)
@@ -84,7 +84,7 @@ export default function CreatePostPreviewMarkdown() {
             target="_blank"
           >
             example
-          </Link>
+          </Link>{' '}
           to write your article
         </p>
 
@@ -133,9 +133,9 @@ export default function CreatePostPreviewMarkdown() {
                 className="bg-secondary py-3 px-3 rounded-lg"
                 {...register('postDescription')}
               />
-              {errors.content && (
+              {errors.postDescription && (
                 <span className="flex text-destructive font-semibold mt-1">
-                  {errors.content.message}
+                  {errors.postDescription.message}
                 </span>
               )}
             </div>
