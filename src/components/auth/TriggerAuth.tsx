@@ -12,9 +12,10 @@ import React from 'react';
 
 import { Button } from '../ui/button';
 import { SignInOptions, signIn, signOut } from 'next-auth/react';
-import { MailIcon } from 'lucide-react';
 import { GitHubLogoIcon } from '@radix-ui/react-icons';
 import { AlertDialogCancel } from '@radix-ui/react-alert-dialog';
+import { useMutation } from '@tanstack/react-query';
+import { Loader2 } from 'lucide-react';
 
 type TriggerAuthType = {
   trigger: React.ReactElement;
@@ -23,6 +24,13 @@ type TriggerAuthType = {
 };
 
 export default function TriggerAuth(props: TriggerAuthType) {
+  const mutation = useMutation({
+    mutationFn: async () =>
+      props.optionalCallBackUrl === null
+        ? signIn()
+        : signIn('github', props.optionalCallBackUrl),
+  });
+
   return (
     <AlertDialog>
       {/* asChild indique qu'on utlise un élément enfant pour activer le déclencheur */}
@@ -35,14 +43,15 @@ export default function TriggerAuth(props: TriggerAuthType) {
           </AlertDialogTitle>
         </AlertDialogHeader>
         <AlertDialogFooter className=" gap-2 m-auto">
-          <Button
-            onClick={async () =>
-              props.optionalCallBackUrl === null
-                ? signIn()
-                : signIn('github', props.optionalCallBackUrl)
-            }
-          >
-            <AlertDialogTitle>Connect with Github</AlertDialogTitle>
+          <Button onClick={async () => mutation.mutate()}>
+            <AlertDialogTitle>
+              {mutation.isPending ? (
+                <Loader2 className="mr-2" size={16} />
+              ) : (
+                <Loader2 className="mr-2" size={16} />
+              )}
+              Connect with Github
+            </AlertDialogTitle>
           </Button>
           <AlertDialogCancel>
             <Button variant="secondary">Cancel</Button>
