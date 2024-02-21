@@ -13,6 +13,7 @@ import React from 'react';
 import { Button } from '../ui/button';
 import { SignInOptions, signIn, signOut } from 'next-auth/react';
 import { MailIcon } from 'lucide-react';
+import { GitHubLogoIcon } from '@radix-ui/react-icons';
 
 type TriggerAuthType = {
   trigger: React.ReactElement;
@@ -37,10 +38,8 @@ export default function TriggerAuth(props: TriggerAuthType) {
                 : signIn('github', props.optionalCallBackUrl)
             }
           >
-            Connect with Github
-          </Button>
-          <Button onClick={async () => await signOut({ callbackUrl: '/' })}>
-            <MailIcon size={16} className="mr-2" /> Disconnect
+            <GitHubLogoIcon height={32} width={32} className="m-auto" />
+            <AlertDialogTitle>Connect with Github</AlertDialogTitle>
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
