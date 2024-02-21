@@ -12,6 +12,7 @@ import {
 import { signIn } from 'next-auth/react';
 import { Github, GithubIcon } from 'lucide-react';
 import { GitHubLogoIcon } from '@radix-ui/react-icons';
+import { AlertDialogCancel } from '@radix-ui/react-alert-dialog';
 
 export const LoginButton = () => {
   return (
@@ -23,7 +24,12 @@ export const LoginButton = () => {
           <AlertDialogTitle>Connect with Github</AlertDialogTitle>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <Button onClick={async () => signIn()}>Connect with Github</Button>
+          <AlertDialogFooter className=" gap-2 m-auto">
+            <Button onClick={async () => signIn()}>Connect with Github</Button>
+            <AlertDialogCancel>
+              <Button variant="secondary">Cancel</Button>
+            </AlertDialogCancel>
+          </AlertDialogFooter>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
