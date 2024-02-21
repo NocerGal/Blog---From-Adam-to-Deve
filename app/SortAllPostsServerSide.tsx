@@ -1,15 +1,8 @@
 import { SortAllPosts } from './SortAllPosts';
-import { postQueryAllPosts, postQueryAllTags } from './post.query';
+import { postQueryAllTags, postQueryPublishedPosts } from './post.query';
 
 export const SortAllPostsServerSide = async () => {
-  // await new Promise((resolve) => {
-  //   setTimeout(() => {
-  //     console.log(resolve);
-  //     resolve(undefined);
-  //   }, 10000);
-  // });
-
-  const posts = await postQueryAllPosts();
+  const posts = await postQueryPublishedPosts();
 
   const getAllTags = await postQueryAllTags();
 

@@ -4,7 +4,6 @@ import { Tag } from '@prisma/client';
 import { postType } from './post.query';
 import { useState } from 'react';
 import { Button } from '../src/components/ui/button';
-
 import { CardPost } from './CardPost';
 
 type SortAllPostsTypes = {

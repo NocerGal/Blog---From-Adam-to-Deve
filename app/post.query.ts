@@ -37,3 +37,25 @@ export const postQueryAllTags = async () => {
 
   return tags;
 };
+
+export const postQueryPublishedPosts = async () => {
+  const allPosts = await prisma.post.findMany({
+    where: {
+      published: true,
+    },
+    select: {
+      id: true,
+      title: true,
+      postDescription: true,
+      updatedAt: true,
+      author: true,
+      tags: true,
+    },
+  });
+
+  const getAllPostsSortByDate = allPosts.sort((a, b) => {
+    return b.updatedAt.getTime() - a.updatedAt.getTime();
+  });
+
+  return getAllPostsSortByDate;
+};
