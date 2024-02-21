@@ -1,12 +1,10 @@
 import React, { Suspense } from 'react';
-import { postQueryAllPosts } from './post.query';
 import { LastPostsPublished } from './LastPostsPulished';
 import { LastPostsPublishedSkeleton } from './LastPostsPublishedSkeleton';
 import { SortAllPostsServerSide } from './SortAllPostsServerSide';
 import { SortAllPostsSkeleton } from './SortAllPostsSkeleton';
 
 export default async function Page() {
-  const posts = await postQueryAllPosts();
   return (
     <div>
       <div className="flex flex-col mb-8 items-center w-full">
@@ -31,7 +29,7 @@ export default async function Page() {
         </div>
 
         <Suspense fallback={<LastPostsPublishedSkeleton />}>
-          <LastPostsPublished posts={posts} />
+          <LastPostsPublished />
         </Suspense>
 
         <div>

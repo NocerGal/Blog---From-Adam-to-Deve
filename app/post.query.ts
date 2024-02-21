@@ -44,6 +44,7 @@ export const postQueryPublishedPosts = async () => {
       published: true,
     },
     select: {
+      published: true,
       id: true,
       title: true,
       postDescription: true,

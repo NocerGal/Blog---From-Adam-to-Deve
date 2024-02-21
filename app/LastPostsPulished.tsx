@@ -1,12 +1,10 @@
-import { getAllPostsType } from './post.query';
+import { postQueryPublishedPosts } from './post.query';
 import { CardPost } from './CardPost';
 import Link from 'next/link';
 
-export const LastPostsPublished = async ({
-  posts,
-}: {
-  posts: getAllPostsType;
-}) => {
+export const LastPostsPublished = async () => {
+  const posts = await postQueryPublishedPosts();
+
   return (
     <div className="mb-4">
       <h2 className="mb-4">Last posts</h2>
