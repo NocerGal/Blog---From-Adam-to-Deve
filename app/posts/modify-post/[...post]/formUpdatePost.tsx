@@ -30,7 +30,6 @@ export const FormUpdatePost = ({ postDatas }: FormUpdatePostTypes) => {
 
   return (
     <>
-      <p>Update????</p>
       <form
         className="flex flex-col gap-4 h-[60vh] mb-8"
         onSubmit={handleSubmit((formDatas) => {
