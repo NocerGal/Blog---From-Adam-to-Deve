@@ -9,11 +9,12 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { signIn } from 'next-auth/react';
+
 import { GitHubLogoIcon } from '@radix-ui/react-icons';
 import { AlertDialogCancel } from '@radix-ui/react-alert-dialog';
 import { useMutation } from '@tanstack/react-query';
 import { Loader2, LogIn } from 'lucide-react';
+import { signIn } from 'next-auth/react';
 
 export const LoginButton = () => {
   const mutation = useMutation({ mutationFn: async () => signIn() });

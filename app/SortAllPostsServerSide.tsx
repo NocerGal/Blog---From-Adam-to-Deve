@@ -1,10 +1,12 @@
 import { SortAllPosts } from './SortAllPosts';
-import { postQueryAllTags, postQueryPublishedPosts } from './post.query';
+import { postQueryPublishedPosts } from './post.action';
+import { postQueryUsedTags } from './post.query';
 
 export const SortAllPostsServerSide = async () => {
   const posts = await postQueryPublishedPosts();
 
-  const getAllTags = await postQueryAllTags();
+  const getUsedAllTags = await postQueryUsedTags();
 
-  return <SortAllPosts allTags={getAllTags} posts={posts} />;
+  console.log(getUsedAllTags);
+  return <SortAllPosts allTags={getUsedAllTags} posts={posts} />;
 };
