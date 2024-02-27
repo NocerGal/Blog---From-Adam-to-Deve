@@ -21,7 +21,9 @@ export default function StyledMarkdown({
           return !inline ? (
             <CustomCodeBlock>{children}</CustomCodeBlock>
           ) : (
-            <code {...props}>{children}</code>
+            <code className="overflow-auto block" {...props}>
+              {children}
+            </code>
           );
         },
       }}
