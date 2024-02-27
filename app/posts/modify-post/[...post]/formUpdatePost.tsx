@@ -9,6 +9,7 @@ import { useForm } from 'react-hook-form';
 import { ModifyPostFormSchema, zodModifyPostFormSchema } from './post.schema';
 import { postActionUpdatePost } from './post.action';
 import { postQueryDatasType } from './post.query';
+import { useState } from 'react';
 
 type FormUpdatePostTypes = {
   postDatas: postQueryDatasType;
@@ -16,6 +17,8 @@ type FormUpdatePostTypes = {
 
 export const FormUpdatePost = ({ postDatas }: FormUpdatePostTypes) => {
   const router = useRouter();
+
+  const [textPreview, setTextPreview] = useState(postDatas.content);
 
   const {
     register,
@@ -27,6 +30,7 @@ export const FormUpdatePost = ({ postDatas }: FormUpdatePostTypes) => {
 
   return (
     <>
+      <p>Update????</p>
       <form
         className="flex flex-col gap-4 h-[60vh] mb-8"
         onSubmit={handleSubmit((formDatas) => {
@@ -71,9 +75,14 @@ export const FormUpdatePost = ({ postDatas }: FormUpdatePostTypes) => {
           <div className="flex flex-col h-full">
             <textarea
               id="postContent"
-              {...register('content')}
+              {...(register('content'),
+              {
+                onChange: (e) => {
+                  setTextPreview(e.target.value);
+                },
+              })}
               className="resize-none h-full w-full bg-secondary py-2 px-3 rounded-lg"
-              defaultValue={postDatas.content}
+              defaultValue={textPreview}
               placeholder="Post content"
             />
             {errors.content && (
@@ -96,7 +105,7 @@ export const FormUpdatePost = ({ postDatas }: FormUpdatePostTypes) => {
           </button>
         </fieldset>
       </form>
-      <StyledMarkdown textPreview={postDatas.content} />
+      <StyledMarkdown textPreview={textPreview} />
     </>
   );
 };
