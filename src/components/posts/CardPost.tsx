@@ -17,10 +17,8 @@ export const CardPost = ({ article }: CardPostProps) => {
     <Card className="flex flex-col justify-between h-full hover:bg-card-foreground hover:text-card transition-all cursor-pointer">
       <CardHeader className="flex flex-col gap-1 m-0 mb-2 pb-0">
         <CardTitle>{article.title}</CardTitle>
-        <CardDescription className="!m-0">
-          {article.postDescription.length <= 169
-            ? article.postDescription
-            : article.postDescription.substring(0, 169) + '...'}
+        <CardDescription className="!m-0 line-clamp-6">
+          {article.postDescription}
         </CardDescription>
       </CardHeader>
 
