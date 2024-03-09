@@ -51,8 +51,6 @@ export function LikePostButton({
     setPostLikesByUserLocal((prev) => !prev);
     setIsButtonDisabled(true);
     setTimeout(() => setIsButtonDisabled(false), 2000);
-
-    console.log();
   };
 
   useEffect(() => {

@@ -20,12 +20,7 @@ export const UserInformations = async ({
   if (!session) {
     notFound();
   }
-  // await new Promise((resolve) => {
-  //   setTimeout(() => {
-  //     console.log(resolve);
-  //     resolve(undefined);
-  //   }, 4000);
-  // });
+
   return (
     <Card className="flex-[2]">
       <CardHeader>

@@ -26,7 +26,6 @@ export function ButtonClient({
   const handleButtonClick = async (postId: string) => {
     const { data, serverError } = await onClickFunction({ postid: postId });
 
-    console.log(serverError);
     if (!data) {
       toast.error('Error to delete this post', serverError);
     }

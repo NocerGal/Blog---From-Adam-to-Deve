@@ -7,6 +7,5 @@ export const SortAllPostsServerSide = async () => {
 
   const getUsedAllTags = await postQueryUsedTags();
 
-  console.log(getUsedAllTags);
   return <SortAllPosts allTags={getUsedAllTags} posts={posts} />;
 };
