@@ -49,16 +49,16 @@ export default async function pageAdmin() {
           </Suspense>
         </div>
       </div>
-      <Suspense fallback={<p>Ok</p>}>
-        {getUserDatas?.role == 'ADMIN' && (
+      {getUserDatas?.role == 'ADMIN' && (
+        <Suspense fallback={<p>Is loading...</p>}>
           <div>
             <Suspense fallback={<AllPostsToReviewSkeleton />}>
               <AllPostsToReview userDatas={getUserDatas} />
             </Suspense>
             <CreateNewTags />
           </div>
-        )}
-      </Suspense>
+        </Suspense>
+      )}
     </div>
   );
 }
