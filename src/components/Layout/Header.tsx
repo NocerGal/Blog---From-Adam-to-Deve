@@ -15,7 +15,7 @@ export default async function Header() {
       <div className="flex justify-between items-center w-xl mx-auto max-w-4xl ">
         <div className="flex items-baseline">
           <Link href="/">
-            <span className="text-2xl mr-6">Dev Tips</span>
+            <span className="text-2xl mr-6">F.A.D.</span>
           </Link>
         </div>
         <nav className="flex gap-2 items-center">
