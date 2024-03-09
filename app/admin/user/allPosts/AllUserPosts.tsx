@@ -1,12 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
-import { ButtonClient } from '../../ButtonClient';
 import { notFound } from 'next/navigation';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../../../pages/api/auth/[...nextauth]';
 import { adminQueryUserPosts } from './admin.query';
 import { Button } from '@/components/ui/button';
-import { adminActionDeletePost } from '../../admin.action';
 import { ButtoButtonDeletePostClient } from '../../ButtonDeletePost';
 
 export const AllUserPosts = async () => {

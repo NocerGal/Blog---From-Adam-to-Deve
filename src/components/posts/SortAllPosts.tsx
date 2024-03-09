@@ -3,9 +3,9 @@
 import { Tag } from '@prisma/client';
 
 import { useState } from 'react';
-import { Button } from '../src/components/ui/button';
+import { Button } from '../ui/button';
 import { CardPost } from './CardPost';
-import { postType } from './post.action';
+import { postType } from '../../../app/post.action';
 
 type SortAllPostsTypes = {
   allTags: Tag[];

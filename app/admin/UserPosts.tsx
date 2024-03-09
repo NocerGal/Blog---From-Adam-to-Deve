@@ -2,9 +2,9 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import Link from 'next/link';
-import { getUserPosts } from '../findPost';
 import { Session } from 'next-auth';
 import { notFound } from 'next/navigation';
+import { postQueryPostsByAuthor } from '../post.query';
 
 type UserPostsPropsTypes = {
   session: Session;
@@ -14,7 +14,7 @@ export const UserPosts = async ({ session }: UserPostsPropsTypes) => {
   if (!session.user.id) {
     notFound();
   }
-  const userPosts = await getUserPosts(session.user.id);
+  const userPosts = await postQueryPostsByAuthor(session.user.id);
 
   return (
     <Card className="flex-1">

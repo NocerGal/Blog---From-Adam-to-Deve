@@ -5,8 +5,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '../src/components/ui/card';
-import { postType } from './post.action';
+} from '../ui/card';
+import { postType } from '../../../app/post.action';
 
 export type CardPostProps = {
   article: postType;
@@ -18,7 +18,9 @@ export const CardPost = ({ article }: CardPostProps) => {
       <CardHeader className="flex flex-col gap-1 m-0 mb-2 pb-0">
         <CardTitle>{article.title}</CardTitle>
         <CardDescription className="!m-0">
-          {article.postDescription}
+          {article.postDescription.length <= 169
+            ? article.postDescription
+            : article.postDescription.substring(0, 169) + '...'}
         </CardDescription>
       </CardHeader>
 

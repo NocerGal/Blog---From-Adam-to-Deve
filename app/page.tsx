@@ -1,10 +1,17 @@
 import React, { Suspense } from 'react';
-import { LastPostsPublished } from './LastPostsPulished';
-import { LastPostsPublishedSkeleton } from './LastPostsPublishedSkeleton';
-import { SortAllPostsServerSide } from './SortAllPostsServerSide';
-import { SortAllPostsSkeleton } from './SortAllPostsSkeleton';
+
+import { LastPostsPublishedSkeleton } from '../src/components/skeletons/LastPostsPublishedSkeleton';
+import { SortAllPosts } from '../src/components/posts/SortAllPosts';
+import { SortAllPostsSkeleton } from '../src/components/skeletons/SortAllPostsSkeleton';
+import Link from 'next/link';
+import { CardPost } from '../src/components/posts/CardPost';
+import { postQueryPublishedPosts } from './post.query';
+import { postQueryUsedTags } from './post.query';
 
 export default async function Page() {
+  const posts = await postQueryPublishedPosts();
+  const getUsedAllTags = await postQueryUsedTags();
+
   return (
     <div>
       <div className="flex flex-col mb-8 items-center w-full">
@@ -29,13 +36,26 @@ export default async function Page() {
         </div>
 
         <Suspense fallback={<LastPostsPublishedSkeleton />}>
-          <LastPostsPublished />
+          <div className="mb-4">
+            <h2 className="mb-4">Last posts</h2>
+            <div className="flex flex-col md:flex-row gap-2">
+              {posts.slice(0, 3).map((post, index) => (
+                <Link
+                  href={`/posts/view-post/${post.id}`}
+                  key={index}
+                  className="w-full md:w-1/3"
+                >
+                  <CardPost article={post} />
+                </Link>
+              ))}
+            </div>
+          </div>
         </Suspense>
 
         <div>
           <h2 className="mb-4">All articles</h2>
           <Suspense fallback={<SortAllPostsSkeleton />}>
-            <SortAllPostsServerSide />
+            <SortAllPosts allTags={getUsedAllTags} posts={posts} />
           </Suspense>
         </div>
       </div>
